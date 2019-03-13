@@ -4,7 +4,7 @@ const app = express();
 app.use(express.static('public'));
 
 app.get('/', function(request, response){
-    response.sendfile('inde.html');
+    response.sendfile('index.html');
 });
 
 app.listen(process.env.PORT || 8080);
