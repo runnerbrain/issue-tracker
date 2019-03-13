@@ -1,2 +1,9 @@
 language: node_js
 node_js: node
+deploy:
+  provider: heroku
+  api_key:
+    secure: jO90xwTKiDbSloWBVq4nAdkJvfAgtwcoOFfQQb0eZbo+tPjMQ7kDlsA547eXj5d/Ru25Q8CiUUd+eoMryovAi2uiEhtW3MstGvygFx/O7a4tef9EDHtsUOo7JtK8Lyuo/SOXMMAOksz00ey3j+ENvT7ufNHvG3IIeIdM1Xu2d8mjRtjrrJfE1qkH8K6QVldqVuOC+q+wmd4byyqq7APv4pTzK6AzlHvVbTdLqvRfzuLdJyFkwjG0ptW2qoBcnyC3hOIsnFTGD6JZfwFtTy8ub7+9bjtiL/4H84xuywI1/xGWUAiz3ho8cHvMVw7fc/MuBf0LpFsceUCqosL1qIK6x5/Uw2GVYZMjDS8b6fvbMC+IhOArkVYRdRryWzNbOV08QnSQeYkzq7eZiFzhMhWrej+nC2j4Iq3Ziwc0Qu1h772zNONxFSSBnggIMMeyOuDVjrOzOHi0qJ5kiIUrBsL6PxUNKxzMh304AHmh4s/fumv+C1+djxGrupbRatrCi3nULwtv49EDejv52Zevjs0SOrlP9QIFZ0ad6fKZc6JVkywvEf0yz1WP7xZ/nT/oJP8Udqmp0BtX2hy+pBYYijOCMqFj6aUwAhxlevwrg5qb/cMFCPsvd8OVszqGap9RVUGT853L4t5XX8QmXE45xbr2oevgnAv+Eh7PylSyy2WTGzM=
+  app: node-capstone
+  on:
+    repo: runnerbrain/node-capstone
