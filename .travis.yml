@@ -4,6 +4,6 @@ deploy:
   provider: heroku
   api_key:
     secure: EtX6q82ho2LJ78TvjKYFm75cPHcr4XtIChXl3wielU+4dOyc5yGwgB/K5ssshPGOSyQWmOTmSd65MifMq7JFhD3XqXLQuDxFfg+N1o77be487gyI8FAET969dm/bc5coPFNTlvX0327NiDrMaprrLXIEE316SEGvi9gj8ZURZjQ/rXGipXkk/N/X5RuxOTZh6BW4nRMw48zTxxiqQLKOKWeWcbqxqVBB5LdBNB0nmhGj40xdVsfiQiHMRyfGC893BiROnvCItZY533jGe9EiVwOzRZkbdb5/jNq8ApZQLUJzLy4QBbvsIl+E4MKtkbixDhvAj/enrXwwUxJjXo2JeJ5477KBgz9bX0DrFa8dk1jMQ1sVTw6PnjQ11YAIIRlUeMJK9O1rgHkRRZiO3AfZdU2WeLXYXtgkCUIG3jN7rnb8vdoflNV9nMT75VjVK5Dt4DSjaaEhT+Hm1maXoE/omr3OSrePW1HE/WRm1qUS70G2s5NoD8+vOa8Min5YfTcEZAy6QxfRPbth/CUf9kVka4Pp4F8WPczqRpHdotExgrNQLYxo6QSuPWUPuiL0tj5S9BOAFM1AvpGU/7xNHTX6+t/loQwo+3m4NLel1xD+QM8IcXboTGsFtEdRYK2ASmox9rTbFJKooKqB9JA7X6uZi6AGXwJmK4/n74WRmX3MLDE=
-  app: https://protected-island-42813.herokuapp.com/
+  app: https://protected-island-42813.herokuapp.com
   on:
     repo: runnerbrain/node-capstone
