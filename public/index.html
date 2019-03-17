@@ -1,12 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="float-grid.css">
+    <link rel="stylesheet" href="main.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+        crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/css?family=Archivo|Noto+Sans" rel="stylesheet">
     <title>Document</title>
 </head>
+
 <body>
-    <p>Hello bird!</p>
+    <div class="banner">
+        <p>Issue Tracker</p>
+    </div>
+    <main>
+        <section role="region" class="flex-container">
+            <div class="add-issue">
+                <i class="material-icons md-72">
+                    add_circle
+                </i>
+
+            </div>
+            <div class="issue-filters">
+                <div id="sort-a-d">
+                    <i class="fas fa-sort"> </i>
+                </div>
+                <div id="due-by">
+                    <label for="due-by-date" id="due-by-label">Due by
+                        <select id="due-by-date">
+                            <option value="0">Today</option>
+                            <option value="1">tomorrow</option>
+                        </select>
+                    </label>
+                </div>
+                <div id="by-category">
+                    <label for="category-pd" id="category-pd-label">Category
+                        <select id="category-pd">
+                            <option value="0">Categ1</option>
+                            <option value="1">Categ2</option>
+                        </select>
+                    </label>
+                </div>
+            </div>
+
+
+        </section>
+        <section role="region" class="row">
+            <div class="issues-strip">
+                <div class="status-info">
+                    <div class="status-text">Pending</div>
+                    <div class="status-close">close-button</div>
+                </div>
+                <div class="issue-info">
+                    <div class="issue-title">Title of the issue</div>
+                    <div class="issue-desc">Decription of the issue 140 chars</div>
+                    <div class="issue-dates">created : 2017-01-01, due: 2019-01-01</div>
+                </div>
+                <div class="issue-tools">
+                    <div class="edit-icon">
+                            <i class="fas fa-edit"></i>
+                    </div>
+                    <div class="comment-icon">
+                            <i class="fa fa-comments" aria-hidden="true"></i>  
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+
 </body>
+
 </html>
+<script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+<script src="./js/index.js"></script>
+
+<!--  
+<div class="reorder"><i class="material-icons md-72">reorder</i></div>
+            <div class="by-date">
+                <select>
+                    <option value=""></option>
+                </select>
+            </div>
+-->
