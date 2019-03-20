@@ -31,18 +31,25 @@
                     <i class="fas fa-sort"> </i>
                 </div>
                 <div id="due-by">
-                    <label for="due-by-date" id="due-by-label">Due by
-                        <select id="due-by-date">
-                            <option value="0">Today</option>
-                            <option value="1">tomorrow</option>
+                    <label for="status" id="status-label">Status
+                        <select id="status">
+                            <option value=""></option>  
+                            <option value="0">Due</option>
+                            <option value="1">Overdue</option>
+                            <option value="2">Pending</option>
                         </select>
                     </label>
                 </div>
                 <div id="by-category">
                     <label for="category-pd" id="category-pd-label">Category
                         <select id="category-pd">
-                            <option value="0">Categ1</option>
-                            <option value="1">Categ2</option>
+                            <option value=""></option>  
+                            <option value="0">Networking</option>
+                            <option value="1">R&D</option>
+                            <option value="2">PACS</option>
+                            <option value="3">Development</option>
+                            <option value="4">Operations</option>
+                            <option value="5">Front-end</option>
                         </select>
                     </label>
                 </div>
@@ -54,7 +61,9 @@
             <div class="issues-strip">
                 <div class="status-info">
                     <div class="status-text">Pending</div>
-                    <div class="status-close">close-button</div>
+                    <div class="status-close"><i class="material-icons">
+                            close
+                            </i></div>
                 </div>
                 <div class="issue-info">
                     <div class="issue-title">Title of the issue</div>
@@ -71,6 +80,12 @@
                 </div>
             </div>
 
+        </section>
+
+        <section role="region">
+            <div class="test-display">
+                
+            </div>
         </section>
     </main>
 

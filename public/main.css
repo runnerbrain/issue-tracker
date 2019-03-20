@@ -72,16 +72,16 @@ body{
     justify-content: center;
   }
 
-  .issue-filters > #due-by,#by-category{
+  .issue-filters > #status,#by-category{
     display: flex;
     font-size: 72px;
-    width: 150px;
+    width: 200px;
     padding: 0 30px 0 30px;
     align-items: center;
     justify-content: center;  
   }
 
-  #due-by-label, #category-pd-label{
+  #status-label, #category-pd-label{
     font-size: 18px;
   }
 
