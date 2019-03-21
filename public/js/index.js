@@ -1,39 +1,44 @@
-const mock_data  = [
-    {
-        title: "My first issue",
-        Description: "First issue description nothing to see here abc def gh",
-        created: "2019-03-11",
-        status: "pending"
-    },
-    {
-        title: "My second issue",
-        Description: "Second issue description nothing to see here abc def gh",
-        created: "2019-03-11",
-        status: "pending"
-    },
-    {
-        title: "My third issue",
-        Description: "Third issue description nothing to see here abc def gh",
-        created: "2019-03-11",
-        status: "closed"
-    }
-]
-
-
-function getAndDisplayAllIssues(cb){
-    setTimeout(function(){
-        cb(mock_data);
-    },100)
-}
-
-function displayIssues(data){
-
-    data.forEach(element => {
-        
-        // $('.test-display').append(element.title);
-    });
-}
 
 $(function(){
-    getAndDisplayAllIssues(displayIssues);
-})
+    
+  function addIssue(){
+    console.log('adding your issue');
+    // let title = $("#form-issue-title").val();
+    // let description = $("#form-issue-description").val();
+    let data = $("#issue-add-form").serialize();
+    // console.log(data);
+    $.post(
+       '/issues',data,function(data){
+       }
+    )
+  }
+
+  $("#issue_due_date").datepicker();
+
+  const mydialog = $( "#dialog-form-div" ).dialog({
+    autoOpen: false,
+    height: 700,
+    width: 650,
+    modal: true,
+    buttons: {
+      "Save": addIssue
+    },
+    show : {effect: "blind",duration: 200},
+    close: function() {
+      //form[ 0 ].reset();
+      //allFields.removeClass( "ui-state-error" );
+    },
+    hide: {
+      effect: "fade",
+      duration: 200
+    }
+  });
+
+    
+    
+    $( "#add-issue-button").on( "click", function(event) {
+      event.preventDefault();
+      mydialog.dialog( "open" );
+  });
+
+});

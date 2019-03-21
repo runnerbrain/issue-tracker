@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
+const bodyParser = require('body-parser');
 
 const {DATABASE_URL, PORT} = require('./config');
 const {IssueTracker} = require('./models');
@@ -9,6 +10,9 @@ const app = express();
 const router = express.Router();
 
 app.use(express.static('public'));
+
+app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.json());
 
 app.get('/', function(request, response){
     response.sendFile('index.html');
@@ -118,7 +122,20 @@ app.get('/issues/:status/:category',(req,res)=>{
 
 
 
-app.post('/issues',(req,res)=>{});
+app.post('/issues',(req,res)=>{
+    console.log(req.body);
+    let _title = req.body.form_issue_title;
+    let _due_date = req.body.issue_due_date;
+    IssueTracker
+    .create({title: _title,due_date: _due_date })
+    .then(Issue => res.status(201).json(Issue.serialize()))
+    .catch(err => {
+        console.error(err);
+        res.status(500).json({error: 'Someting went wrong in the post /issues endpoint'});
+    })
+	console.log(req.body);
+});
+
 app.post('/issues/:issue_id/comments',(req,res)=>{});
 
 app.put('issues/:issue_id',(req,res)=>{});

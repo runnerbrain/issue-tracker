@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="float-grid.css">
     <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
         crossorigin="anonymous">
@@ -20,12 +21,13 @@
     </div>
     <main>
         <section role="region" class="flex-container">
-            <div class="add-issue">
-                <i class="material-icons md-72">
+            
+                <a href="" id="add-issue-button"><i class="material-icons md-72">
                     add_circle
                 </i>
+                </a>
 
-            </div>
+            
             <div class="issue-filters">
                 <div id="sort-a-d">
                     <i class="fas fa-sort"> </i>
@@ -87,6 +89,52 @@
                 
             </div>
         </section>
+
+        <div id="dialog-form-div" title="Add a new task">
+           <form action="" id="issue-add-form">
+                <fieldset>    
+                   <label for="form_issue_title">Title
+                   <input type="text" name="form_issue_title" id="form_issue_title"
+                           class="text ui-widget-content ui-corner-all" 
+                   >
+                    </label>
+                   <label for="form-issue-description">Description
+                   <textarea name="form-issue-description" id="form-issue-description" cols="30" rows="6"></textarea>
+                   </label>
+                   <label for="form-category">Category
+                    <select name="form-category" id="form-category">
+                        <option value=""></option>
+                        <option value="R&D">R&D</option>
+                        <option value="Development">Development</option>
+                        <option value="Networking">Networking</option>
+                        <option value="Operation">Operations</option>
+                        <option value="PACS">PACS</option>
+                    </select>
+                   </label>
+                   <label for="new-category">Add new category
+                   <input type="text" name="new-category" id="new-category">
+                    </label>
+                   <label for="issue_due_date">Due date
+                       <input type="text" name="issue_due_date" id="issue_due_date">
+                   </label>
+                   <label for="form-issue-contributors">Contributors
+                       <select name="form-issue-contributors" id="form-issue-contributors">
+                            <option value=""></option>
+                            <option value="Mahmoud">Mahmoud</option>
+                            <option value="Samra">Samra</option>
+                            <option value="Munai">Munai</option>
+                            <option value="Murooj">Murooj</option>
+                            <option value="Homer">Homer</option>
+                            <option value="Smithers">Smithers</option>
+
+                        </select>
+                   </label>
+                   <label for="new-contributor">Add a contributor
+                        <input type="text" name="new-contributor" id="new-contributor">
+                    </label>
+                </fieldset>
+           </form> 
+        </div>
     </main>
 
 
@@ -95,6 +143,7 @@
 </html>
 <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 <script src="./js/index.js"></script>
 
 <!--  

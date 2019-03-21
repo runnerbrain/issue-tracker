@@ -163,4 +163,17 @@ body{
     justify-content: center;
   }
 
+  /* Issue create dialog */
+  input, label, textarea, select {
+    display:block;
+}
+
+label{
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+  #dialog-form{
+    display: none;  
+  }
 
