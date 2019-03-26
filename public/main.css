@@ -5,7 +5,10 @@ body{
     
         background-image: url("paper.gif");
         /* background-color: #cccccc; */
+}
 
+fieldset{
+  border: 0;
 }
 
 /* Add a black background color to the top navigation */
@@ -48,14 +51,14 @@ body{
 
   .add-issue{
       display: flex;
-      flex-grow: 1;
+      flex-grow: 2;
       align-items: center;
   }
 
 
    .issue-filters{
       display: flex;
-      flex-grow: 9;
+      flex-grow: 8;
       align-items: flex-end;
       flex-direction: row;
       border-top: 1px solid #555;
@@ -90,14 +93,16 @@ body{
     border: 1px solid #aaa;
     border-radius: 3px;
     height: 100px;
+    margin-bottom: 20px;
   }
 
   .issues-strip > .status-info{
     display: flex;
-    flex-grow: 1;
+    /* flex-grow: 1; */
     flex-direction: column;
     border-right: 1px solid #aaa;
     /* background: chocolate; */
+    width: 120px;
   }
 
   .status-info > .status-text{
@@ -118,35 +123,40 @@ body{
   .issues-strip > .issue-info{
     padding-left: 10px;
     display: flex;
-    flex-grow: 7;
+    /* flex-grow: 7; */
     flex-direction: column;
+    width: 800px;
   }
 
   .issue-info > .issue-title{
     font-family: 'Archivo', sans-serif;
     font-weight: bold;
     display: flex;
-    flex-grow: 1;
-    color: rgb(100, 130, 182)
+    /* flex-grow: 1; */
+    color: rgb(100, 130, 182);
+    margin-top: 10px;
   }
 
   .issue-info > .issue-desc{
     font-family: 'Noto Sans', sans-serif;
     display: flex;
-    flex-grow: 7;
+     flex-grow: 1; 
+    
   }
 
   .issue-info > .issue-dates{
     display: flex;
     align-items: flex-end;
     justify-content: flex-end;
+    align-self: flex-end;
   }
 
   .issues-strip > .issue-tools{
     display: flex;
-    flex-grow: 1;
+    /* flex-grow: 1; */
     font-size: 24px;
     flex-direction: column;
+    width: 80px;
   }
 
   .issue-tools > .edit-icon{
@@ -164,12 +174,16 @@ body{
   }
 
   /* Issue create dialog */
-  input, label, textarea, select {
+  #dialog-form-div  input, 
+  #dialog-form-div label,
+  #dialog-form-div textarea,
+  #dialog-form-div select,
+  #staged-contirbutors {
     display:block;
 }
 
 label{
-  margin-bottom: 15px;
+  margin: 10px 0 5px 0;
   font-size: 16px;
 }
 
@@ -177,3 +191,121 @@ label{
     display: none;  
   }
 
+  .flex-elems-hor{
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    padding: 0;
+    margin-top: 10px;
+  }
+
+  .flex-elems-hor > li{
+    display: flex;
+    list-style: none;
+    margin-right: 50px;
+    flex-direction: row;
+  }
+  .li-elem{
+    display: flex;
+    margin-right: 5px;
+    flex-direction: column;
+    /* align-items: flex-start */
+  }
+
+  .li-elem > select{
+    margin-bottom: 5px;
+  }
+
+  .li-elem > a{
+    font-weight: 400;
+    font-size: 12px;
+    color: rgb(115, 151, 206)
+  }
+
+  .li-elem-icon{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 20px;
+    flex-direction: column;
+  }
+
+  #contributors-list-container{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .new-element-textfield{
+    display: flex;
+    flex-direction: row;
+  }
+
+  .new-element-textfield > div{
+    margin-right: 10px;
+    align-items: center;
+  }
+
+  .new-element-textfield{
+    display: flex;
+    flex-direction: row;
+  }
+
+  .select-list-first-elem{
+    display: flex;
+    flex-direction: row;
+    
+  }
+
+  .select-list > div {
+    margin-bottom: 5px;
+  }
+
+  .select-list-first-elem > div{
+    margin-right: 5px;
+  }
+  
+  #new-category-container{
+    display: flex;
+    align-items: center; 
+    justify-content: flex-start;  
+  }
+
+  #new-category-container:nth-child(2){
+    margin-left: 10px;
+  }
+
+  #new-category-textfield{
+    display: none;
+  }
+
+  #category-add-message,#contributor-add-message{
+    display: none;
+  }
+
+  button{
+    margin-top: 10px; 
+    padding: .4em;
+    color: #666
+  }
+
+  #contributors-to-add{
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+  }
+
+
+  .staged-contributor-div{
+    background: #aaa;
+    border-radius: 3px;
+    padding: 5px;
+    margin: 5px;
+    font-size: 12px;
+
+  }
+
+  .remove-staged-contributor{
+    float: right;
+    margin-left: 5px;
+    font-size: 12px;
+  }

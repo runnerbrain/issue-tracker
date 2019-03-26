@@ -9,9 +9,9 @@
     <link rel="stylesheet" href="main.css">
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
-        crossorigin="anonymous">
-        <link href="https://fonts.googleapis.com/css?family=Archivo|Noto+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+        integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Archivo|Noto+Sans" rel="stylesheet">
     <title>Document</title>
 </head>
 
@@ -21,13 +21,13 @@
     </div>
     <main>
         <section role="region" class="flex-container">
-            
-                <a href="" id="add-issue-button"><i class="material-icons md-72">
+
+            <a href="" id="add-issue-button"><i class="material-icons md-72">
                     add_circle
                 </i>
-                </a>
+            </a>
 
-            
+
             <div class="issue-filters">
                 <div id="sort-a-d">
                     <i class="fas fa-sort"> </i>
@@ -35,7 +35,7 @@
                 <div id="due-by">
                     <label for="status" id="status-label">Status
                         <select id="status">
-                            <option value=""></option>  
+                            <option value=""></option>
                             <option value="0">Due</option>
                             <option value="1">Overdue</option>
                             <option value="2">Pending</option>
@@ -45,7 +45,7 @@
                 <div id="by-category">
                     <label for="category-pd" id="category-pd-label">Category
                         <select id="category-pd">
-                            <option value=""></option>  
+                            <option value=""></option>
                             <option value="0">Networking</option>
                             <option value="1">R&D</option>
                             <option value="2">PACS</option>
@@ -56,84 +56,112 @@
                     </label>
                 </div>
             </div>
-
-
         </section>
+
         <section role="region" class="row">
-            <div class="issues-strip">
-                <div class="status-info">
-                    <div class="status-text">Pending</div>
-                    <div class="status-close"><i class="material-icons">
-                            close
-                            </i></div>
-                </div>
-                <div class="issue-info">
-                    <div class="issue-title">Title of the issue</div>
-                    <div class="issue-desc">Decription of the issue 140 chars</div>
-                    <div class="issue-dates">created : 2017-01-01, due: 2019-01-01</div>
-                </div>
-                <div class="issue-tools">
-                    <div class="edit-icon">
-                            <i class="fas fa-edit"></i>
-                    </div>
-                    <div class="comment-icon">
-                            <i class="fa fa-comments" aria-hidden="true"></i>  
-                    </div>
-                </div>
-            </div>
-
-        </section>
-
-        <section role="region">
-            <div class="test-display">
-                
+            <div id="issueslist">
             </div>
         </section>
+
+       
 
         <div id="dialog-form-div" title="Add a new task">
-           <form action="" id="issue-add-form">
-                <fieldset>    
-                   <label for="form_issue_title">Title
-                   <input type="text" name="form_issue_title" id="form_issue_title"
-                           class="text ui-widget-content ui-corner-all" 
-                   >
-                    </label>
-                   <label for="form-issue-description">Description
-                   <textarea name="form-issue-description" id="form-issue-description" cols="30" rows="6"></textarea>
-                   </label>
-                   <label for="form-category">Category
-                    <select name="form-category" id="form-category">
-                        <option value=""></option>
-                        <option value="R&D">R&D</option>
-                        <option value="Development">Development</option>
-                        <option value="Networking">Networking</option>
-                        <option value="Operation">Operations</option>
-                        <option value="PACS">PACS</option>
-                    </select>
-                   </label>
-                   <label for="new-category">Add new category
-                   <input type="text" name="new-category" id="new-category">
-                    </label>
-                   <label for="issue_due_date">Due date
-                       <input type="text" name="issue_due_date" id="issue_due_date">
-                   </label>
-                   <label for="form-issue-contributors">Contributors
-                       <select name="form-issue-contributors" id="form-issue-contributors">
-                            <option value=""></option>
-                            <option value="Mahmoud">Mahmoud</option>
-                            <option value="Samra">Samra</option>
-                            <option value="Munai">Munai</option>
-                            <option value="Murooj">Murooj</option>
-                            <option value="Homer">Homer</option>
-                            <option value="Smithers">Smithers</option>
+            <div id="tabs">
+                <ul>
+                    <li><a href="#create-task-tab">Add Task</a></li>
+                    <li><a href="#create-category-tab">New Categories</a></li>
+                    <li><a href="#create-contributor-tab">New Contributors</a></li>
+                </ul>
+                <div id="create-task-tab">
 
-                        </select>
-                   </label>
-                   <label for="new-contributor">Add a contributor
-                        <input type="text" name="new-contributor" id="new-contributor">
-                    </label>
-                </fieldset>
-           </form> 
+                    <form action="" id="issue-add-form">
+                        <fieldset>
+                            <label for="form_issue_title">Title</label>
+                            <input type="text" name="form_issue_title" id="form_issue_title"
+                                class="text ui-widget-content ui-corner-all">
+
+                            <label for="form-issue-description">Description</label>
+                            <textarea name="form_issue_description" id="form_issue_description" cols="50" rows="6"
+                                class="text ui-widget-content ui-corner-all"></textarea>
+
+                            <div class="flex-elems-hor">
+
+                                <div class="li-elem">
+                                    <label for="form-category">Category</label>
+                                    <select name="form-category" id="form-category"
+                                        class="text ui-widget-content ui-corner-all">
+
+                                    </select>
+
+                                </div>
+
+
+
+
+
+
+                            </div>
+                            <label for="issue_due_date">Due date</label>
+                            <input type="text" name="issue_due_date" id="issue_due_date"
+                                class="text ui-widget-content ui-corner-all">
+
+                            <div class="flex-elems-hor">
+                                
+                                    <div id="contributors-list-container">
+                                        <label for="form-contributors">Contributors</label>
+                                        <div class="select-list">
+                                            <div class="select-list-first-elem">
+                                                <div>
+                                                    <select name="form-contributors" id="form-contributors"
+                                                        class="text ui-widget-content ui-corner-all">
+
+                                                    </select>
+                                                </div>
+
+                                                <div>
+                                                    <a href="" id="add-contributor"><i class="fas fa-plus-circle"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                
+                                    <div id="contributors-to-add" style="display: flex; flex-direction: column;">
+                                        
+                                    </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+                <div id="create-category-tab">
+                    <div id="new-category-container">
+                        <div>
+                            <label for="new-category">New Category</label>
+                            <input type="text" name="new-category" id="new-category"
+                            class="text ui-widget-content ui-corner-all">
+                        </div>
+
+                        <div id="category-add-message">added</div>
+                    </div>
+                    <button id="add-new-category-option">Save</button>
+                    
+                </div>
+                <div id="create-contributor-tab">
+                        <label for="firstName">First name</label>
+                        <input type="text" name="firstName" id="firstName"
+                        class="text ui-widget-content ui-corner-all">
+                        <label for="lastName">Last name</label>
+                    
+                        <input type="text" name="lastName" id="lastName"
+                        class="text ui-widget-content ui-corner-all">
+                        <label for="username">Username</label>
+                        <input type="text" name="username" id="username"
+                        class="text ui-widget-content ui-corner-all">
+                        <div id="contributor-add-message">Added</div>
+                        <button id="add-new-contributor">Save</button>
+
+                </div>
+            </div>
+
         </div>
     </main>
 
@@ -143,7 +171,7 @@
 </html>
 <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 <script src="./js/index.js"></script>
 
 <!--  
