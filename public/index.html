@@ -64,6 +64,17 @@
         </section>
 
        
+        <div id="dialog-comment-div" title="Add a comment">
+            <form action="" id="add-comment">
+                    <input type="hidden" name="comment_issue_id" id="comment_issue_id" />
+                    <textarea name="issue_comment" id="issue_comment" cols="50" rows="6"
+                                class="text ui-widget-content ui-corner-all" placeholder="....">
+                    </textarea>
+            </form>
+            <div class="previous-comments">
+
+            </div>
+        </div>
 
         <div id="dialog-form-div" title="Add a new task">
             <div id="tabs">
@@ -85,21 +96,12 @@
                                 class="text ui-widget-content ui-corner-all"></textarea>
 
                             <div class="flex-elems-hor">
-
                                 <div class="li-elem">
                                     <label for="form-category">Category</label>
                                     <select name="form-category" id="form-category"
                                         class="text ui-widget-content ui-corner-all">
-
                                     </select>
-
                                 </div>
-
-
-
-
-
-
                             </div>
                             <label for="issue_due_date">Due date</label>
                             <input type="text" name="issue_due_date" id="issue_due_date"
@@ -124,9 +126,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                
                                     <div id="contributors-to-add" style="display: flex; flex-direction: column;">
-                                        
                                     </div>
                             </div>
                         </fieldset>

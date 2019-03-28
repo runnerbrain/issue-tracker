@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const bodyParser = require('body-parser');
+const moment = require('moment');
 
 const {
     DATABASE_URL,
@@ -29,10 +30,11 @@ app.get('/', function (request, response) {
 
 
 app.get('/issues', (req, res) => {
+
     IssueModel
         .find()
         .then(issues => {
-            console.log(issues);
+            //console.log(issues);
             res.json(issues.map(issue => issue.serialize()));
         })
         .catch(err => {
@@ -43,6 +45,22 @@ app.get('/issues', (req, res) => {
         });
 });
 
+app.get('/issues/:issue_id', (req, res) => {
+    let _issue_id = req.params.issue_id;
+
+    IssueModel
+        .findById(_issue_id)
+        .then(issues => {
+            res.json(issues);
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).send({
+                error: 'Something went wrong in the /issues/:issue_id/comments endpoint'
+            })
+        })
+});
+
 app.get('/issues/:issue_id/comments', (req, res) => {
     let _issue_id = req.params.issue_id;
 
@@ -50,6 +68,13 @@ app.get('/issues/:issue_id/comments', (req, res) => {
         .findById(_issue_id, {
             '_id': 0,
             'follow_up': 1
+        }, {
+            _id: 0,
+            follow_up: 1
+        }, null, {
+            sort: {
+                "follow_up.created_at": 1
+            }
         })
         .then(issues => {
             res.json(issues);
@@ -188,16 +213,16 @@ app.get('/categories', (req, res) => {
 
 
 app.post('/issues', (req, res) => {
-    console.log(req.body);
+    //console.log(req.body);
     let _title = req.body.form_issue_title;
     let _description = req.body.form_issue_description;
     let _created_at_now = new Date().toISOString();
     let _category = req.body.category;
     let _due_date = req.body.issue_due_date;
-    
+
 
     let _contributor_number = req.body.contributor_number;
-    console.log('The number of contributors is: ' + req.body.contributor_number)
+    //console.log('The number of contributors is: ' + req.body.contributor_number)
     let _contributors = [];
 
     for (let i = 0; i < _contributor_number; i++) {
@@ -210,7 +235,7 @@ app.post('/issues', (req, res) => {
         ContributorModel
             .find(query)
             .then(contributor => {
-                console.log(contributor[0]._id);
+                //console.log(contributor[0]._id);
                 let contributorObj = {
                     _id: contributor[0]._id
                 };
@@ -232,7 +257,7 @@ app.post('/issues', (req, res) => {
             created_at: _created_at_now,
             category: _category,
             due_date: _due_date,
-            status: _status
+            open: true
         })
         .then(issue =>
             IssueModel.where({
@@ -257,7 +282,34 @@ app.post('/issues', (req, res) => {
         })
 });
 
-app.post('/issues/:issue_id/comments', (req, res) => {});
+app.post('/issues/:issue_id/comments', (req, res) => {
+
+    let issue_id = req.body.comment_issue_id;
+    let _comment = req.body.issue_comment;
+    let _created_at_now = moment();
+    let _commentObj = {
+        comment: _comment,
+        created_at: _created_at_now
+    }
+    console.log(issue_id);
+    IssueModel
+        .findByIdAndUpdate(issue_id, {
+            $push: {
+                follow_up: _commentObj
+            }
+        })
+        .then(issue =>{
+            console.log(issue.follow_up); 
+            res.status(201).json({message: 'success message of adding a comment'})
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).json({
+                error: 'Could not add comment'
+            });
+        })
+
+});
 
 
 app.post('/categories', (req, res) => {
@@ -298,7 +350,11 @@ app.post('/contributor', (req, res) => {
         })
 })
 
-app.put('issues/:issue_id', (req, res) => {});
+app.put('/issues/:issue_id', (req, res) => {
+    let id = req.params.issue_id;
+    console.log(`server.js ${id}`);
+    console.log('boo boo');
+});
 app.put('/issues/:issue_id/:comment_id', (req, res) => {});
 
 app.delete('/issues/:issue_id', (req, res) => {});

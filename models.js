@@ -1,8 +1,13 @@
 'use strict';
 
 const mongoose = require('mongoose');
+const moment = require('moment');
+
+moment().format();
+
 mongoose.Promise = global.Promise;
 mongoose.set('useCreateIndex', true);
+
 
 const IssueSchema = mongoose.Schema({
     title: {type: String, required: true},
@@ -10,11 +15,12 @@ const IssueSchema = mongoose.Schema({
     created_at: {type: Date, Default: Date.now},
     category: {type: String, required: false},
     due_date: {type: Date, required: true},
-    open: {type: Boolean, required: true},
+    open: {type: Boolean, required: true, Default: true},
     follow_up: [{
+        _id: false,
         comment: String,
-        date: Date,
-        contributor: {type: mongoose.SchemaTypes.ObjectId, ref: 'ContributorModel'}
+        created_at: {type: Date, Default: Date.now}
+        // contributor: {type: mongoose.SchemaTypes.ObjectId, ref: 'ContributorModel'}
     }],
     contributors: [{
         username: {type: mongoose.SchemaTypes.ObjectId, ref: 'ContributorModel'}
@@ -23,19 +29,15 @@ const IssueSchema = mongoose.Schema({
 });
 
 IssueSchema.virtual('status_virtual').get(function(){
-    let due = (this.due_date)
-    let due1 = due.split('T')[0];
-    let todayDate = new Date();
-    let today = todayDate.split('T')[0];
+    var today = moment().format('YYYY-MM-DD');
+    var due = moment(this.due_date).format('YYYY-MM-DD');;
 
-    // let date_diff_in_days = ((new Date(this.due_date)) - (new Date())) / (24 * 3500 * 1000);
-    let date_diff_in_days = (due_date - today ) / (24 * 3500 * 1000);
-
-    if(date_diff_in_days > 0)
+    if( moment(due).isAfter(today) )
         return `Pending`
-    else if (date_diff_in_days < 0)
+    else if ( moment(due).isBefore(today) )
         return `Overdue`
-    else return `Due`
+    else if( moment(due).isSame(today))
+        return `Due`
 })
 
 IssueSchema.methods.serialize = function(){
@@ -47,11 +49,11 @@ IssueSchema.methods.serialize = function(){
         status: this.status_virtual,
         category: this.category,
         due: this.due_date,
+        open: this.open,
         follow_up: this.follow_up,
         contributors: this.contributors
     }
 }
-
 
 const ContributorSchema = mongoose.Schema({
     firstName: {type: String, required: true},
