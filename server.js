@@ -305,7 +305,13 @@ app.post('/issues/:issue_id/comments', (req, res) => {
         })
         .then(issue =>{
             //console.log(issue.length); 
-            res.status(201).json({issue: issue});
+            res.status(201).send(
+                {
+                    _id: issue_id,
+                    title: issue.title,
+                    follow_up: issue.follow_up
+                }
+            );
         })
         .catch(err => {
             console.error(err);

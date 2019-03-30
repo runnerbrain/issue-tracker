@@ -170,15 +170,26 @@ function handleForm() {
     let data = $("#add-comment").serialize();
     let issue_id = $("#comment_issue_id").val();
     //console.log('addComment -> ' + issue_id);
-    $.post(`/issues/${issue_id}/comments`,data).done(
-      function(data) {
-        let fup = data.issue.follow_up;
-        let fup_length = fup.length;
-        console.log('success I guess!'+ fup[fup_length -1s].comment);
-        // displayComments(data.issue.follow_up[follow_up.length - 1]);
-        $("#issue_comment").val('');
-      });
-  }
+    $.post(`/issues/${issue_id}/comments`,data);
+    fetch(`/issues/${issue_id}/comments`)
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      }
+      throw new Error(response.statusText);
+    })
+    .then(responseJson => {
+      let commentArr = responseJson.follow_up;
+      console.log(commentArr[commentArr.length-1]);
+      displayComments(responseJson.follow_up[responseJson.follow_up.length -1]);
+    })
+    .catch(err => {
+      console.error(err);
+    });
+      
+    $("#issue_comment").val('');
+
+    }
 
   function addIssue() {
 
