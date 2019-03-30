@@ -9,6 +9,29 @@ mongoose.Promise = global.Promise;
 mongoose.set('useCreateIndex', true);
 
 
+//Contributor Schema
+const ContributorSchema = mongoose.Schema({
+    firstName: {type: String, required: true},
+    lastName: {type: String, required: true},
+    username: {type: String, required: true, unique: true}
+})
+
+ContributorSchema.methods.serialize = function(){
+    return {
+        id: this._id,
+        first: this.firstName,
+        last: this.lastName,
+        username: this.username
+    }
+}
+
+//Category Scheam
+const CategorySchema = mongoose.Schema({
+    category: {type: String, required : true}
+})
+
+
+//Issue Schema
 const IssueSchema = mongoose.Schema({
     title: {type: String, required: true},
     description: {type: String, required: false},
@@ -16,15 +39,15 @@ const IssueSchema = mongoose.Schema({
     category: {type: String, required: false},
     due_date: {type: Date, required: true},
     open: {type: Boolean, required: true, Default: true},
+    username: {type: String},
     follow_up: [{
         _id: false,
         comment: String,
         created_at: {type: Date, Default: Date.now}
-        // contributor: {type: mongoose.SchemaTypes.ObjectId, ref: 'ContributorModel'}
     }],
-    contributors: [{
-        username: {type: mongoose.SchemaTypes.ObjectId, ref: 'ContributorModel'}
-    }]
+    contributors:  [{type: mongoose.Schema.Types.ObjectId, ref: 'Contributor'}]
+    
+    
 
 });
 
@@ -40,7 +63,21 @@ IssueSchema.virtual('status_virtual').get(function(){
         return `Due`
 })
 
+// IssueSchema.pre('find',function(next){
+//     this.populate({path: 'contributors'})
+// })
+
+// IssueSchema.pre('findById',function(next){
+//     this.populate('contributors')
+// })
+
+
+// IssueSchema.pre('findByIdAndUpdate',function(next){
+//     this.populate('contributors')
+// })
+
 IssueSchema.methods.serialize = function(){
+    // console.log(`from Model ${this}`);
     return {
         id: this._id,
         title: this.title,
@@ -55,28 +92,12 @@ IssueSchema.methods.serialize = function(){
     }
 }
 
-const ContributorSchema = mongoose.Schema({
-    firstName: {type: String, required: true},
-    lastName: {type: String, required: true},
-    username: {type: String, required: true, index: {unique: true}}
-})
 
-ContributorSchema.methods.serialize = function(){
-    return {
-        id: this._id,
-        first: this.firstName,
-        last: this.lastName,
-        username: this.username
-    }
-}
 
-const CategorySchema = mongoose.Schema({
-    category: {type: String, required : true}
-})
 
-const IssueModel = mongoose.model('Issue',IssueSchema);
 const ContributorModel = mongoose.model('Contributor',ContributorSchema);
 const CategoryModel = mongoose.model('Category',CategorySchema);
+const IssueModel = mongoose.model('Issue',IssueSchema);
 
-module.exports = {IssueModel,ContributorModel,CategoryModel};
+module.exports = {ContributorModel,CategoryModel,IssueModel};
 

@@ -8,10 +8,11 @@ const {
     DATABASE_URL,
     PORT
 } = require('./config');
+
 const {
-    IssueModel,
     ContributorModel,
-    CategoryModel
+    CategoryModel,
+    IssueModel
 } = require('./models');
 
 const app = express();
@@ -50,8 +51,10 @@ app.get('/issues/:issue_id', (req, res) => {
 
     IssueModel
         .findById(_issue_id)
-        .then(issues => {
-            res.json(issues);
+        .populate('contrbiutors')
+        .then(issue => {
+            console.log(issue)
+            res.json(issue);
         })
         .catch(err => {
             console.error(err);
@@ -295,12 +298,14 @@ app.post('/issues/:issue_id/comments', (req, res) => {
     IssueModel
         .findByIdAndUpdate(issue_id, {
             $push: {
-                follow_up: _commentObj
+                    follow_up: { $each : [ _commentObj ],
+                    $sort: {created_at: 1}
+                }
             }
         })
         .then(issue =>{
-            console.log(issue.follow_up); 
-            res.status(201).json({message: 'success message of adding a comment'})
+            //console.log(issue.length); 
+            res.status(201).json({issue: issue});
         })
         .catch(err => {
             console.error(err);
@@ -352,9 +357,12 @@ app.post('/contributor', (req, res) => {
 
 app.put('/issues/:issue_id', (req, res) => {
     let id = req.params.issue_id;
+    
     console.log(`server.js ${id}`);
     console.log('boo boo');
+    res.json({message: 'test'})
 });
+
 app.put('/issues/:issue_id/:comment_id', (req, res) => {});
 
 app.delete('/issues/:issue_id', (req, res) => {});

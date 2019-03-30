@@ -1,5 +1,6 @@
 'use strict';
 
+
 let contributor_num = 0;
 
 function to_string_date(dt) {
@@ -54,7 +55,7 @@ function displayComments(elem){
   let comment_div = generateCommentContainer();
   let comment_text = $(`<div class="comment-text">${elem.comment}</div>`);
   let comment_date = $(`<div class="comment-date">${elem_date}</div>`);
-  $(comment_div).append(comment_text).append(comment_date).appendTo('.previous-comments');
+  $(comment_div).append(comment_text).append(comment_date).prependTo('.previous-comments');
 }
 
 function displayListOfIssues() {
@@ -62,9 +63,9 @@ function displayListOfIssues() {
   fetch('/issues')
     .then(response => response.json())
     .then((IssueArr) => {
-      //console.log(IssueArr.length);
+      // console.log(IssueArr.length);
       IssueArr.forEach(elem => {
-        // console.log(elem.id);
+         console.log(elem.contributors);
         let new_issue = generateIssueCard(elem);
         $("#issueslist").append(new_issue);
       })
@@ -80,7 +81,7 @@ function createCategoryPullDowns() {
     .then(categoryArr => {
       categoryArr.forEach(elem => {
         let val = elem['category'];
-        $_form_category.append(`<option value=${val}>${val}</option>`);
+        $_form_category.append(`<option value='${val}'>${val}</option>`);
       })
     })
 }
@@ -100,16 +101,19 @@ function createContributorsPullDowns() {
     })
 }
 
-function populateForm(issue){
-  $('#form_issue_title').val(issue.title);
-  $('#form_issue_description').val(issue.description);
-  $('#form_category').val(issue.category)
-  let dt = issue.due_date.split('T')[0];
-  $("#issue_due_date").val(dt);
-  
-}
+
 
 function handleForm() {
+
+  function populateForm(issue){
+    $('#form_issue_title').val(issue.title);
+    $('#form_issue_description').val(issue.description);
+    $('#form-category').val(issue.category);
+    let dt = issue.due_date.split('T')[0];
+    $("#issue_due_date").val(dt);
+    console.log(issue.contributors);
+    // $('#contirbutors-to-add').val(issue.contributors);
+  }
 
   $("#tabs").tabs();
 
@@ -159,23 +163,25 @@ function handleForm() {
     }
   })
 
+  $("#issue_due_date").datepicker();
+
   function addComment() {
-    console.log('adding your comment');
+    //console.log('adding your comment');
     let data = $("#add-comment").serialize();
     let issue_id = $("#comment_issue_id").val();
-    console.log('addComment -> ' + issue_id);
-    $.post(`/issues/${issue_id}/comments`,data,function(data) {
-      console.log('success I guess!'+data.message);
-    });
-    displayComments(data);
-    $("#issue_comment").val('');
-    
+    //console.log('addComment -> ' + issue_id);
+    $.post(`/issues/${issue_id}/comments`,data).done(
+      function(data) {
+        let fup = data.issue.follow_up;
+        let fup_length = fup.length;
+        console.log('success I guess!'+ fup[fup_length -1s].comment);
+        // displayComments(data.issue.follow_up[follow_up.length - 1]);
+        $("#issue_comment").val('');
+      });
   }
 
   function addIssue() {
-    console.log('adding your issue');
-    // let title = $("#form-issue-title").val();
-    // let description = $("#form-issue-description").val();
+
     $('#contributors-list-container').append(
       `<input type='hidden'
         name='contributor_number'
@@ -189,6 +195,7 @@ function handleForm() {
     )
   }
 
+
   $("#issueslist").on('click','.edit-issue',function(event){
     event.preventDefault();
     let issue_id = $(this).attr('id');
@@ -201,6 +208,7 @@ function handleForm() {
       })
       .then( responseJson => {
         mydialog.dialog("open");
+        $( "#dialog-form-div").dialog({title: 'Edit task'});
         populateForm(responseJson);
       })
       .catch(err => {
@@ -217,8 +225,6 @@ function handleForm() {
       category: `${option_to_add}`
     };
 
-    // $('#form-category').append(`<option value=${option_to_add}>${option_to_add}</option>`);
-    //categoryArr.push(option_to_add);
     $.post('/categories', obj_to_add, function (data, status) {
       $("#category-add-message").toggle().fadeOut();
     });
@@ -272,17 +278,18 @@ function handleForm() {
     contributor_num--;
   })
 
-  $("#issue_due_date").datepicker();
+ 
 
   $("#add-issue-button").on("click", function (event) {
     event.preventDefault();
     mydialog.dialog("open");
+    $("#dialog-form-div").dialog({title: 'Add a new task'});
   });
 
   $("#issueslist").on('click','.close-issue-lnk', function (event) {
     event.preventDefault();
     let issue_id = $(this).attr('id');
-
+  
     $.ajax({
       url: `/issues/${issue_id}`,
       data: {
@@ -290,7 +297,7 @@ function handleForm() {
       },
       type: 'PUT',
       success: function (data) {
-        console.log('who knows....maybe');
+        console.log(data);
       }
     })
   });
@@ -330,6 +337,7 @@ function handleForm() {
 }
 
 function openPage() {
+  // console.log('in open page');
   displayListOfIssues();
   createCategoryPullDowns();
   createContributorsPullDowns();
