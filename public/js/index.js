@@ -2,6 +2,8 @@
 
 
 let contributor_num = 0;
+const icon_lnk_close = `<i class="fas fa-window-close"></i>`;
+const icon_lnk_open = `<i class="fas fa-folder-open"></i>`;
 
 function to_string_date(dt) {
   return dt.split('T')[0];
@@ -11,18 +13,18 @@ function generateIssueCard(issue) {
   let created_at_string = to_string_date(issue.created);
   let issue_due_string = to_string_date(issue.due);
   if (issue.open) {
-    var status_lnk = 'close-issue-lnk';
-    var icon_lnk = `<i class="fas fa-window-close"></i>`
+    var status_lnk = 'open-issue';
+    var icon_lnk = `${icon_lnk_open}`
   } else {
-    var status_lnk = 'close-issue-lnk';
-    var icon_lnk = `<i class="fas fa-folder-open"></i>`
+    var status_lnk = 'closed-issue';
+    var icon_lnk = `${icon_lnk_close}`
   }
   return `
       <div class="issues-strip">
         <div class="status-info">
           <div class="status-text">${issue.status}</div>
-          <div class="status-close">
-            <a href="" class="${status_lnk}" id="${issue.id}">${icon_lnk}</a>
+          <div class="status-area">
+            <a href="" class="${status_lnk}" id="co_icon_${issue.id}">${icon_lnk}</a>
           </div>
         </div>
         <div class="issue-info">
@@ -180,7 +182,7 @@ function handleForm() {
     })
     .then(responseJson => {
       let commentArr = responseJson.follow_up;
-      console.log(commentArr[commentArr.length-1]);
+      // console.log(commentArr[commentArr.length-1]);
       displayComments(responseJson.follow_up[responseJson.follow_up.length -1]);
     })
     .catch(err => {
@@ -297,17 +299,30 @@ function handleForm() {
     $("#dialog-form-div").dialog({title: 'Add a new task'});
   });
 
-  $("#issueslist").on('click','.close-issue-lnk', function (event) {
+  $("#issueslist").on('click','.status-area', function (event) {
     event.preventDefault();
-    let issue_id = $(this).attr('id');
-  
+
+    let issue_id = ($(this).children().attr('id')).substring(8);   
+    let _status = $(this).children().attr('class');
+    
     $.ajax({
-      url: `/issues/${issue_id}`,
+      url: `/issues/${issue_id}/status/${_status}`,
       data: {
-        id: issue_id
+        id: issue_id,
+        status: _status
       },
       type: 'PUT',
       success: function (data) {
+    
+        let co_selector = `#co_icon_${data.id}`;
+        let open_status = data.open;    
+    
+        if(open_status === 'true'){
+          $(co_selector).attr('class','open-issue').html(`<i class="fas fa-folder-open"></i>`);
+        }
+        else{
+          $(co_selector).attr('class','closed-issue').html(`<i class="fas fa-window-close"></i>`);
+        }
         console.log(data);
       }
     })
