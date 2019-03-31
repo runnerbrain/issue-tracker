@@ -361,12 +361,28 @@ app.post('/contributor', (req, res) => {
         })
 })
 
-app.put('/issues/:issue_id', (req, res) => {
-    let id = req.params.issue_id;
-    
-    console.log(`server.js ${id}`);
-    console.log('boo boo');
-    res.json({message: 'test'})
+app.put('/issues/:issue_id/status/:status', (req, res) => {
+    let issue_id = req.params.issue_id;
+    let status_request = req.params.status;
+    if(status_request == 'closed-issue')
+        change_status_to = true;
+        else change_status_to = false;
+
+    IssueModel
+    .findByIdAndUpdate(issue_id,
+        { $set : {open : `${change_status_to}` }
+    })
+    .then( issue => {
+        //console.log(issue);
+        res.status(201).json({id: issue_id, open: `${change_status_to}`})
+    })
+    .catch(err => {
+        console.error(err);
+        res.status(500).json({message: 'Something went wrong editing the status'});
+    })
+
+    // console.log(`from status endpoint, status is: ${open}`);
+
 });
 
 app.put('/issues/:issue_id/:comment_id', (req, res) => {});
