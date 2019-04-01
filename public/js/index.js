@@ -4,6 +4,7 @@
 let contributor_num = 0;
 const icon_lnk_close = `<i class="fas fa-window-close"></i>`;
 const icon_lnk_open = `<i class="fas fa-folder-open"></i>`;
+const contributorObjArr = [];
 
 function to_string_date(dt) {
   return dt.split('T')[0];
@@ -67,7 +68,8 @@ function displayListOfIssues() {
     .then((IssueArr) => {
       // console.log(IssueArr.length);
       IssueArr.forEach(elem => {
-         console.log(elem.contributors);
+        //console.log(elem.title);
+        // console.log(elem.contributors);
         let new_issue = generateIssueCard(elem);
         $("#issueslist").append(new_issue);
       })
@@ -75,8 +77,8 @@ function displayListOfIssues() {
 }
 
 function createCategoryPullDowns() {
-  let $_form_category = $("#form-category");
-  $('#form-category option').remove();
+  let $_form_category = $("#form_category");
+  $('#form_category option').remove();
   $_form_category.append(`<option value=''></option>`)
   fetch('/categories')
     .then(response => response.json())
@@ -90,32 +92,89 @@ function createCategoryPullDowns() {
 
 function createContributorsPullDowns() {
 
-  let $_form_contributor = $("#form-contributors");
-  $('#form-contributors option').remove();
+  let $_form_contributor = $(".form_contributors");
+  $('.form_contributors option').remove();
   $_form_contributor.append(`<option value = ''></option>`);
-  fetch('contributors')
+  fetch('/contributors')
     .then(response => response.json())
     .then(contributorArr => {
       contributorArr.forEach(elem => {
-        let val = elem['username'];
-        $_form_contributor.append(`<option value=${val}>${val}</option>`);
+        contributorObjArr.push(elem);
+        let username_val = elem['username'];
+        let id_val = elem['_id'];
+        $_form_contributor.append(`<option value=${id_val}>${username_val}</option>`);
       })
     })
 }
 
+function fetchContributorsByName(contributor){
+  console.log('test driving new func'+contributor);
+  var uname = contributorObjArr.find(elem => {
+    console.log(elem._id);
+    return elem._id === contributor
+  })
+  return uname;
+}
+
+function populateForm(issue){
+  $("#contributors-to-add").empty();
+  $("#edit_issue_id").val(issue._id);
+  $('#form_issue_title').val(issue.title);
+  $('#form_issue_description').val(issue.description);
+  $('#form_category').val(issue.category);
+  let dt = issue.due_date.split('T')[0];
+  $("#issue_due_date").val(dt);
+  console.log(`populate ---> ${issue.lead}`);
+  var uname = fetchContributorsByName(issue.lead);
+  console.log('from fetch function '+uname.username);
+  $('#lead_contributor').val(uname._id);
+
+  // $('#contirbutors-to-add').val(issue.contributors);
+  // console.log(issue.contributors[0]);
+  // console.log(issue.contributors);
+  // let username_arr = [];
+  // issue.contributors.forEach(elem =>{ 
+  //   contributorObjArr.find( e => {
+  //     if( e._id === elem )
+  //       username_arr.push(e.username);
+  //   } )
+
+  // })
+  //Get the number of users already displayed
+  // let contributor_num = $('#contributors-to-add').children().length;
+  // username_arr.forEach(elem => {  
+  //   displaySelectedContributor(elem);
+  // })
+
+  // console.log(username_arr);
+
+  // console.log(contributorObjArr[0]._id);
+}
+
+function displaySelectedContributor(contributor){
+  // console.log('displaySelectedContributors at work');
+  $(`<div class="staged-contributor-div">${contributor}
+         <span class="remove-staged-contributor">
+            <a href="" class="remove-contributor">
+              <i class="fas fa-times"></i>
+            </a>
+         </span>
+     </div>`
+    )
+    .addClass('staged-contributor-div')
+    .appendTo('#contributors-to-add');
+    
+    let num = $('#contributors-to-add').children('input').length;
+    $('#contributors-to-add').append(
+      `<input type='hidden' 
+          name='contributor_${num}' 
+          id='contributor_${num}' 
+          value='${contributor}'>`);
+
+}
 
 
 function handleForm() {
-
-  function populateForm(issue){
-    $('#form_issue_title').val(issue.title);
-    $('#form_issue_description').val(issue.description);
-    $('#form-category').val(issue.category);
-    let dt = issue.due_date.split('T')[0];
-    $("#issue_due_date").val(dt);
-    console.log(issue.contributors);
-    // $('#contirbutors-to-add').val(issue.contributors);
-  }
 
   $("#tabs").tabs();
 
@@ -124,17 +183,14 @@ function handleForm() {
     height: 800,
     width: 750,
     modal: true,
-    buttons: {
-      "Save": addIssue
-    },
     show: {
       effect: "blind",
       duration: 200
     },
     close: function () {
+      mydialog.find('form')[0].reset();
+      $('#contributors-to-add').empty();
 
-      //form[0].reset();
-      //allFields.removeClass( "ui-state-error" );
     },
     hide: {
       effect: "fade",
@@ -155,9 +211,7 @@ function handleForm() {
       duration: 200
     },
     close: function () {
-
-      //form[0].reset();
-      //allFields.removeClass( "ui-state-error" );
+      $('#contributors-to-add').empty();
     },
     hide: {
       effect: "fade",
@@ -195,7 +249,7 @@ function handleForm() {
 
   function addIssue() {
 
-    $('#contributors-list-container').append(
+    $('#contributors-to-add').append(
       `<input type='hidden'
         name='contributor_number'
         id='contributor_number'
@@ -207,6 +261,21 @@ function handleForm() {
       function (data) {}
     )
   }
+
+  function editIssue(){
+    let edit_data = $("#issue-add-form").serialize();
+    let issue_id = $("#edit_issue_id").val();
+    console.log(`in editIssue function : ${issue_id}`);
+    console.log('in editIssue function: '+edit_data);
+    $.ajax({
+      url: `/issues/${issue_id}`,
+      data: edit_data,
+      type: 'PUT',
+      success: function (data) {
+          console.log('Successful edit'+data);
+        }
+      })
+    }
 
 
   $("#issueslist").on('click','.edit-issue',function(event){
@@ -220,9 +289,11 @@ function handleForm() {
         throw new Error(response.statusText);
       })
       .then( responseJson => {
+        //console.log(responseJson);
+        populateForm(responseJson); //intial array of contributors is here.
         mydialog.dialog("open");
+        mydialog.dialog({buttons: {"Edit":  editIssue}})
         $( "#dialog-form-div").dialog({title: 'Edit task'});
-        populateForm(responseJson);
       })
       .catch(err => {
         console.error(err);
@@ -271,16 +342,18 @@ function handleForm() {
     // let $_contributors_to_add_list = $("#contributors-to-add");
     let $_contributor_to_add = $("#form-contributors").val();
     // console.log($_contributor_to_add);
-    $(`<div class="staged-contributor-div">${$_contributor_to_add}
-         <span class="remove-staged-contributor"><a href="" class="remove-contributor"><i class="fas fa-times"></i></a></span></div>`)
-      .addClass('staged-contributor-div')
-      .appendTo('#contributors-to-add');
-    contributor_num++;
-    $('#contributors-list-container').append(
-      `<input type='hidden' 
-          name='contributor_${contributor_num}' 
-          id='contributor_${contributor_num}' 
-          value='${$_contributor_to_add}'>`);
+    //alert($('#contributors-to-add').children().length);
+    displaySelectedContributor($_contributor_to_add);
+    // $(`<div class="staged-contributor-div">${$_contributor_to_add}
+    //      <span class="remove-staged-contributor"><a href="" class="remove-contributor"><i class="fas fa-times"></i></a></span></div>`)
+    //   .addClass('staged-contributor-div')
+    //   .appendTo('#contributors-to-add');
+    // contributor_num++;
+    // $('#contributors-list-container').append(
+    //   `<input type='hidden' 
+    //       name='contributor_${contributor_num}' 
+    //       id='contributor_${contributor_num}' 
+    //       value='${$_contributor_to_add}'>`);
     $('#form-contributors').val('');
 
   })
@@ -297,6 +370,8 @@ function handleForm() {
     event.preventDefault();
     mydialog.dialog("open");
     $("#dialog-form-div").dialog({title: 'Add a new task'});
+    mydialog.dialog({buttons: {"Save":  addIssue}})
+
   });
 
   $("#issueslist").on('click','.status-area', function (event) {
@@ -323,7 +398,6 @@ function handleForm() {
         else{
           $(co_selector).attr('class','closed-issue').html(`<i class="fas fa-window-close"></i>`);
         }
-        console.log(data);
       }
     })
   });

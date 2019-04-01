@@ -203,6 +203,15 @@ label{
     display: none;  
   }
 
+  .flex-elems-ver{
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    padding: 0;
+    margin-top: 10px;
+    flex-direction: column
+  }
+
   .flex-elems-hor{
     display: flex;
     flex-wrap: nowrap;

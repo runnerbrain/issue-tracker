@@ -45,7 +45,8 @@ const IssueSchema = mongoose.Schema({
         comment: String,
         created_at: {type: Date, Default: Date.now}
     }],
-    contributors:  [{type: mongoose.Schema.Types.ObjectId, ref: 'Contributor'}]
+    lead: { type: mongoose.Schema.Types.ObjectId, ref: 'Contributor', required: true},
+    contributors:  [{ type: mongoose.Schema.Types.ObjectId, ref: 'Contributor'}]
     
     
 

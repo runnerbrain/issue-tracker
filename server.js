@@ -53,7 +53,6 @@ app.get('/issues/:issue_id', (req, res) => {
         .findById(_issue_id)
         .populate('contrbiutors')
         .then(issue => {
-            console.log(issue)
             res.json(issue);
         })
         .catch(err => {
@@ -220,69 +219,101 @@ app.post('/issues', (req, res) => {
     let _title = req.body.form_issue_title;
     let _description = req.body.form_issue_description;
     let _created_at_now = new Date().toISOString();
-    let _category = req.body.category;
+    let _category = req.body.form_category;
     let _due_date = req.body.issue_due_date;
+    let _lead_contributor = req.body.lead_contributor;
 
-
-    let _contributor_number = req.body.contributor_number;
+    //let _contributor_number = req.body.contributor_number; (this is needed in the contributors section)
     //console.log('The number of contributors is: ' + req.body.contributor_number)
-    let _contributors = [];
+    //let _contributors = [];
 
-    for (let i = 0; i < _contributor_number; i++) {
-        let index = `contributor_${(i+1)}`;
-        let current = req.body[`${index}`];
-        let query = {
-            username: current
-        };
+    // for (let i = 0; i < _contributor_number; i++) {
+    //     let index = `contributor_${(i+1)}`;
+    //     let current = req.body[`${index}`];
+    //     let query = {
+    //         username: current
+    //     }; (this is needed in the contributors section)
 
         ContributorModel
-            .find(query)
+            .findById(_lead_contributor)
             .then(contributor => {
-                //console.log(contributor[0]._id);
-                let contributorObj = {
-                    _id: contributor[0]._id
-                };
-                _contributors.push(contributorObj);
+                if(contributor){
+                    IssueModel
+                    .create({
+                                title: _title,
+                                description: _description,
+                                created_at: _created_at_now,
+                                category: _category,
+                                due_date: _due_date,
+                                open: true,
+                                lead: _lead_contributor
+                    })
+                    .then(issue => {
+                        res.status(201).json(issue.serialize());
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        res.status(500).json({error: 'Something is wrong with the post issues endpoint..'})
+                    })
+                }else{
+                    const message = 'Contributor not found';
+                    console.error(message);
+                    return res.status(400).send(message);
+                }
             })
             .catch(err => {
                 console.error(err);
-                res.status(501).json({
-                    Error: 'Something went wrong with finding a contributor'
-                });
+                res.status(500).json({message: 'Someting is wrong with finding a contributor by Id..'});
             })
-    }
+    //     ContributorModel
+    //         .find(query)
+    //         .then(contributor => {
+    //             //console.log(contributor[0]._id);
+    //             let contributorObj = {
+    //                 _id: contributor[0]._id
+    //             };
+    //             _contributors.push(contributorObj);
+    //         })
+    //         .catch(err => {
+    //             console.error(err);
+    //             res.status(501).json({
+    //                 Error: 'Something went wrong with finding a contributor'
+    //             });
+    //         })
+    // // }
 
     //console.log(_contributors);   
-    IssueModel
-        .create({
-            title: _title,
-            description: _description,
-            created_at: _created_at_now,
-            category: _category,
-            due_date: _due_date,
-            open: true
-        })
-        .then(issue =>
-            IssueModel.where({
-                _id: issue._id
-            })
-            .update({
-                $set: {
-                    contributors: _contributors
-                }
-            })
-            .then(updatedIssue => {
-                res.status(201).json({
-                    message: 'All is well'
-                })
-            })
-        )
-        .catch(err => {
-            console.error(err);
-            res.status(500).json({
-                error: 'Someting went wrong in the post /issues endpoint'
-            });
-        })
+    // IssueModel
+    //     .create({
+    //         title: _title,
+    //         description: _description,
+    //         created_at: _created_at_now,
+    //         category: _category,
+    //         due_date: _due_date,
+    //         open: true,
+
+    //     })
+    //     .then(issue =>
+    //         IssueModel.where({
+    //             _id: issue._id
+    //         })
+    //         .update({
+    //             $set: {
+    //                 contributors: _contributors
+    //             }
+    //         })
+    //         .then(updatedIssue => {
+    //             res.status(201).json({
+    //                 message: 'All is well'
+    //             })
+    //         })
+    //     )
+    //     .catch(err => {
+    //         console.error(err);
+    //         res.status(500).json({
+    //             error: 'Someting went wrong in the post /issues endpoint'
+    //         });
+    //     })
 });
 
 app.post('/issues/:issue_id/comments', (req, res) => {
@@ -359,6 +390,29 @@ app.post('/contributor', (req, res) => {
                 error: 'Something went wrong with the post /contributors endpoint'
             });
         })
+})
+
+app.put('/issues/:issue_id', (req,res)=>{
+
+    let issue_id = req.params.issue_id;
+
+    const updated = {};
+    updated.title = req.body.form_issue_title;
+    updated.description = req.body.form_issue_description;
+    updated.category = req.body.form_category;
+    updated.due_date = req.body.issue_due_date;
+    updated.lead= req.body.lead_contributor;
+
+    IssueModel
+    .findByIdAndUpdate(issue_id,{$set: updated})
+    .then(updatedIssue => {
+        console.log(updatedIssue);
+        res.status(200).json(updatedIssue.serialize());
+    })
+    .catch(err => {
+        console.error(err);
+        res.status(500).json({message: 'Something went wrong with updating the issue..'});
+    })
 })
 
 app.put('/issues/:issue_id/status/:status', (req, res) => {

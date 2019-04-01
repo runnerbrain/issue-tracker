@@ -63,12 +63,12 @@
             </div>
         </section>
 
-       
+
         <div id="dialog-comment-div" title="Add a comment">
             <form action="" id="add-comment">
-                    <input type="hidden" name="comment_issue_id" id="comment_issue_id" />
-                    <textarea name="issue_comment" id="issue_comment" cols="50" rows="6"
-                                class="text ui-widget-content ui-corner-all" placeholder="....">
+                <input type="hidden" name="comment_issue_id" id="comment_issue_id" />
+                <textarea name="issue_comment" id="issue_comment" cols="50" rows="6"
+                    class="text ui-widget-content ui-corner-all" placeholder="....">
                     </textarea>
             </form>
             <div class="previous-comments">
@@ -79,13 +79,14 @@
         <div id="dialog-form-div" title="">
             <div id="tabs">
                 <ul>
-                    <li><a href="#create-task-tab">Add Task</a></li>
-                    <li><a href="#create-category-tab">New Categories</a></li>
-                    <li><a href="#create-contributor-tab">New Contributors</a></li>
+                    <li><a href="#create-task-tab">Tasks</a></li>
+                    <li><a href="#create-category-tab">Categories</a></li>
+                    <li><a href="#create-contributor-tab">Contributors</a></li>
                 </ul>
                 <div id="create-task-tab">
 
                     <form action="" id="issue-add-form">
+                        <input type="hidden" name="edit_issue_id" id="edit_issue_id">
                         <fieldset>
                             <label for="form_issue_title">Title</label>
                             <input type="text" name="form_issue_title" id="form_issue_title"
@@ -97,8 +98,8 @@
 
                             <div class="flex-elems-hor">
                                 <div class="li-elem">
-                                    <label for="form-category">Category</label>
-                                    <select name="form-category" id="form-category"
+                                    <label for="form_category">Category</label>
+                                    <select name="form_category" id="form_category"
                                         class="text ui-widget-content ui-corner-all">
                                     </select>
                                 </div>
@@ -108,26 +109,22 @@
                                 class="text ui-widget-content ui-corner-all">
 
                             <div class="flex-elems-hor">
-                                
-                                    <div id="contributors-list-container">
-                                        <label for="form-contributors">Contributors</label>
-                                        <div class="select-list">
-                                            <div class="select-list-first-elem">
-                                                <div>
-                                                    <select name="form-contributors" id="form-contributors"
-                                                        class="text ui-widget-content ui-corner-all">
 
-                                                    </select>
-                                                </div>
-
-                                                <div>
-                                                    <a href="" id="add-contributor"><i class="fas fa-plus-circle"></i></a>
-                                                </div>
+                                <div id="contributors-list-container">
+                                    <label for="form_contributors">Contributors</label>
+                                    <div class="select-list">
+                                        <div class="select-list-first-elem">
+                                            <div>
+                                                <select name="lead_contributor" id="lead_contributor"
+                                                    class="form_contributors text ui-widget-content ui-corner-all" />
+                                                </select>
                                             </div>
+
+                                            
                                         </div>
                                     </div>
-                                    <div id="contributors-to-add" style="display: flex; flex-direction: column;">
-                                    </div>
+                                </div>
+                               
                             </div>
                         </fieldset>
                     </form>
@@ -137,27 +134,51 @@
                         <div>
                             <label for="new-category">New Category</label>
                             <input type="text" name="new-category" id="new-category"
-                            class="text ui-widget-content ui-corner-all">
+                                class="text ui-widget-content ui-corner-all">
                         </div>
 
                         <div id="category-add-message">added</div>
                     </div>
                     <button id="add-new-category-option">Save</button>
-                    
+
                 </div>
-                <div id="create-contributor-tab">
+                <div id="create-contributor-tab" style="display:flex;flex-direction: row;">
+                        <div class="flex-elems-ver">
+
+                                <div id="contributors-list-container">
+                                    <label for="form-contributors">Contributors</label>
+                                    <div class="select-list">
+                                        <div class="select-list-first-elem">
+                                            <div>
+                                                <select name="form-contributors" id="form-contributors"
+                                                    class="form-contributors text ui-widget-content ui-corner-all">
+        
+                                                </select>
+                                            </div>
+        
+                                            <div>
+                                                <a href="" id="add-contributor"><i class="fas fa-plus-circle"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="contributors-to-add" style="display: flex; flex-direction: column;">
+                                </div>
+                                <div id="contributors-to-add" style="display: flex; flex-direction: column;">
+                                </div>
+                            </div>
+                    <div class="flex-elems-ver" style: >
                         <label for="firstName">First name</label>
-                        <input type="text" name="firstName" id="firstName"
-                        class="text ui-widget-content ui-corner-all">
+                        <input type="text" name="firstName" id="firstName" class="text ui-widget-content ui-corner-all">
                         <label for="lastName">Last name</label>
-                    
-                        <input type="text" name="lastName" id="lastName"
-                        class="text ui-widget-content ui-corner-all">
+
+                        <input type="text" name="lastName" id="lastName" class="text ui-widget-content ui-corner-all">
                         <label for="username">Username</label>
-                        <input type="text" name="username" id="username"
-                        class="text ui-widget-content ui-corner-all">
+                        <input type="text" name="username" id="username" class="text ui-widget-content ui-corner-all">
                         <div id="contributor-add-message">Added</div>
                         <button id="add-new-contributor">Save</button>
+                    </div>
+                    
 
                 </div>
             </div>
