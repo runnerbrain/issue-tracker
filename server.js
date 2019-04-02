@@ -90,8 +90,14 @@ app.get('/issues/:issue_id/comments', (req, res) => {
 });
 
 
-app.get('/issues/:status/:category', (req, res) => {
+app.get('/issues/filter/:status/:category', (req, res) => {
+    let dt = new Date();
+    dt = dt.toISOString();
+    dt = dt.split('T')[0];
+    let due_date = 
+    console.log(dt);
     const _status = req.params.status;
+    console.log(_status);
     const _categ = req.params.category || 'all';
     let query = {};
     if (_status !== '' && _status !== 'all') {
@@ -100,21 +106,21 @@ app.get('/issues/:status/:category', (req, res) => {
             case 'due':
                 query = {
                     due_date: {
-                        '$eq': new Date()
+                        '$eq': dt
                     }
                 };
                 break;
             case 'overdue':
                 query = {
                     due_date: {
-                        $lt: new Date()
+                        $lt: dt
                     }
                 };
                 break;
             case 'pending':
                 query = {
                     due_date: {
-                        '$gt': new Date()
+                        '$gt': dt
                     }
                 };
             default:

@@ -37,7 +37,7 @@ const IssueSchema = mongoose.Schema({
     description: {type: String, required: false},
     created_at: {type: Date, Default: Date.now},
     category: {type: String, required: false},
-    due_date: {type: Date, required: true},
+    due_date: {type: String, required: true},
     open: {type: Boolean, required: true, Default: true},
     username: {type: String},
     follow_up: [{
@@ -57,12 +57,14 @@ IssueSchema.virtual('status_virtual').get(function(){
     var due = moment(this.due_date).format('YYYY-MM-DD');;
 
     if( moment(due).isAfter(today) )
-        return `Pending`
+        return `pending`
     else if ( moment(due).isBefore(today) )
-        return `Overdue`
+        return `overdue`
     else if( moment(due).isSame(today))
-        return `Due`
+        return `due`
 })
+
+IssueSchema.virtual('due_date_virtual')
 
 // IssueSchema.pre('find',function(next){
 //     this.populate({path: 'contributors'})

@@ -33,25 +33,20 @@
                     <i class="fas fa-sort"> </i>
                 </div>
                 <div id="due-by">
-                    <label for="status" id="status-label">Status
-                        <select id="status">
+                    <label for="status_pd_filter" id="status-label">Status
+                        <select id="status_pd_filter" class="text ui-widget-content ui-corner-all">
                             <option value=""></option>
-                            <option value="0">Due</option>
-                            <option value="1">Overdue</option>
-                            <option value="2">Pending</option>
+                            <option value="due">Due</option>
+                            <option value="overdue">Overdue</option>
+                            <option value="pending">Pending</option>
                         </select>
                     </label>
                 </div>
                 <div id="by-category">
-                    <label for="category-pd" id="category-pd-label">Category
-                        <select id="category-pd">
+                    <label for="category_pd_filter" id="category-pd-label">Category
+                        <select id="category_pd_filter" class="text ui-widget-content ui-corner-all">
                             <option value=""></option>
-                            <option value="0">Networking</option>
-                            <option value="1">R&D</option>
-                            <option value="2">PACS</option>
-                            <option value="3">Development</option>
-                            <option value="4">Operations</option>
-                            <option value="5">Front-end</option>
+                            
                         </select>
                     </label>
                 </div>
@@ -146,11 +141,11 @@
                         <div class="flex-elems-ver">
 
                                 <div id="contributors-list-container">
-                                    <label for="form-contributors">Contributors</label>
+                                    <label for="form_contributors">Contributors</label>
                                     <div class="select-list">
                                         <div class="select-list-first-elem">
                                             <div>
-                                                <select name="form-contributors" id="form-contributors"
+                                                <select name="form_contributors" id="form_contributors"
                                                     class="form-contributors text ui-widget-content ui-corner-all">
         
                                                 </select>

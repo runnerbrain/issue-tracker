@@ -61,19 +61,21 @@ function displayComments(elem){
   $(comment_div).append(comment_text).append(comment_date).prependTo('.previous-comments');
 }
 
-function displayListOfIssues() {
-  const $_issues_list = $("#issueslist");
+
+function displayListOfIssues(issues){
+  $('#issueslist').empty();
+  issues.forEach(elem => {
+    let new_issue = generateIssueCard(elem);
+    $("#issueslist").append(new_issue);
+  })
+}
+
+function displayAllIssuesOnOpen(){
   fetch('/issues')
     .then(response => response.json())
     .then((IssueArr) => {
-      // console.log(IssueArr.length);
-      IssueArr.forEach(elem => {
-        //console.log(elem.title);
-        // console.log(elem.contributors);
-        let new_issue = generateIssueCard(elem);
-        $("#issueslist").append(new_issue);
-      })
-    })
+      displayListOfIssues(IssueArr)
+    });
 }
 
 function createCategoryPullDowns() {
@@ -86,15 +88,18 @@ function createCategoryPullDowns() {
       categoryArr.forEach(elem => {
         let val = elem['category'];
         $_form_category.append(`<option value='${val}'>${val}</option>`);
+        $('#category_pd_filter').append(`<option value='${val}'>${val}</option>`);
       })
     })
 }
 
 function createContributorsPullDowns() {
 
-  let $_form_contributor = $(".form_contributors");
+  let $_lead_contributor = $("#lead_contributor");
+  let $_form_contributors = $('#form_contributors');
   $('.form_contributors option').remove();
-  $_form_contributor.append(`<option value = ''></option>`);
+  $_lead_contributor.append(`<option value = ''></option>`);
+  $_form_contributors.append(`<option value = ''></option>`);
   fetch('/contributors')
     .then(response => response.json())
     .then(contributorArr => {
@@ -102,7 +107,8 @@ function createContributorsPullDowns() {
         contributorObjArr.push(elem);
         let username_val = elem['username'];
         let id_val = elem['_id'];
-        $_form_contributor.append(`<option value=${id_val}>${username_val}</option>`);
+        $_lead_contributor.append(`<option value=${id_val}>${username_val}</option>`);
+        $_form_contributors.append(`<option value=${id_val}>${username_val}</option>`);
       })
     })
 }
@@ -173,12 +179,70 @@ function displaySelectedContributor(contributor){
 
 }
 
+function addComment() {
+  //console.log('adding your comment');
+  let data = $("#add-comment").serialize();
+  let issue_id = $("#comment_issue_id").val();
+  //console.log('addComment -> ' + issue_id);
+  $.post(`/issues/${issue_id}/comments`,data);
+  fetch(`/issues/${issue_id}/comments`)
+  .then(response => {
+    if (response.ok) {
+      return response.json();
+    }
+    throw new Error(response.statusText);
+  })
+  .then(responseJson => {
+    let commentArr = responseJson.follow_up;
+    // console.log(commentArr[commentArr.length-1]);
+    displayComments(responseJson.follow_up[responseJson.follow_up.length -1]);
+  })
+  .catch(err => {
+    console.error(err);
+  });
+    
+  $("#issue_comment").val('');
 
-function handleForm() {
+  }
+
+function addIssue() {
+
+  $('#contributors-to-add').append(
+    `<input type='hidden'
+      name='contributor_number'
+      id='contributor_number'
+      value='${contributor_num}'>`)
+  let data = $("#issue-add-form").serialize();
+  // console.log(data);
+  $.post(
+    '/issues', data,
+    function (data) {}
+  )
+}
+
+function editIssue(){
+  let edit_data = $("#issue-add-form").serialize();
+  let issue_id = $("#edit_issue_id").val();
+  console.log(`in editIssue function : ${issue_id}`);
+  console.log('in editIssue function: '+edit_data);
+  $.ajax({
+    url: `/issues/${issue_id}`,
+    data: edit_data,
+    type: 'PUT',
+    success: function (data) {
+        console.log('Successful edit'+data);
+      }
+    })
+  }
+
+  //---------------------------------------------------------------------------
+  //---------------------------------------------------------------------------
+
+  function handleForm() {
 
   $("#tabs").tabs();
 
-  const mydialog = $("#dialog-form-div").dialog({
+  const taskDialog = $("#dialog-form-div").dialog({
     autoOpen: false,
     height: 800,
     width: 750,
@@ -188,7 +252,7 @@ function handleForm() {
       duration: 200
     },
     close: function () {
-      mydialog.find('form')[0].reset();
+      taskDialog.find('form')[0].reset();
       $('#contributors-to-add').empty();
 
     },
@@ -219,65 +283,50 @@ function handleForm() {
     }
   })
 
-  $("#issue_due_date").datepicker();
+  $("#issue_due_date").datepicker({
+    dateFormat: "yy-mm-dd"
+  });
 
-  function addComment() {
-    //console.log('adding your comment');
-    let data = $("#add-comment").serialize();
-    let issue_id = $("#comment_issue_id").val();
-    //console.log('addComment -> ' + issue_id);
-    $.post(`/issues/${issue_id}/comments`,data);
-    fetch(`/issues/${issue_id}/comments`)
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      }
-      throw new Error(response.statusText);
-    })
-    .then(responseJson => {
-      let commentArr = responseJson.follow_up;
-      // console.log(commentArr[commentArr.length-1]);
-      displayComments(responseJson.follow_up[responseJson.follow_up.length -1]);
-    })
-    .catch(err => {
-      console.error(err);
-    });
-      
-    $("#issue_comment").val('');
 
-    }
-
-  function addIssue() {
-
-    $('#contributors-to-add').append(
-      `<input type='hidden'
-        name='contributor_number'
-        id='contributor_number'
-        value='${contributor_num}'>`)
-    let data = $("#issue-add-form").serialize();
-    // console.log(data);
-    $.post(
-      '/issues', data,
-      function (data) {}
-    )
-  }
-
-  function editIssue(){
-    let edit_data = $("#issue-add-form").serialize();
-    let issue_id = $("#edit_issue_id").val();
-    console.log(`in editIssue function : ${issue_id}`);
-    console.log('in editIssue function: '+edit_data);
-    $.ajax({
-      url: `/issues/${issue_id}`,
-      data: edit_data,
-      type: 'PUT',
-      success: function (data) {
-          console.log('Successful edit'+data);
+  $('#status_pd_filter').change(function(){
+    let _status = $(this).val() || 'all'
+    let _category = $('#category_pd_filter').val() || 'all'
+    fetch(`/issues/filter/${_status}/${_category}`)
+      .then( response => {
+        if(response.ok){
+          return response.json();
         }
+        throw new Error(response.statusText);
       })
-    }
+      .then( responseJson => {
+        displayListOfIssues(responseJson);
 
+      })
+      .catch(err => {
+        console.error(err);
+      })
+  });
 
+  $('#category_pd_filter').change(function(){
+    let _category = $('#category_pd_filter').val() || 'all'
+    let _status = $(this).val() || 'all'
+    fetch(`/issues/filter/${_status}/${_category}`)
+      .then( response => {
+        if(response.ok){
+          return response.json();
+        }
+        throw new Error(response.statusText);
+      })
+      .then( responseJson => {
+        displayListOfIssues(responseJson);
+
+      })
+      .catch(err => {
+        console.error(err);
+      })
+  });
+
+//Open edit form...
   $("#issueslist").on('click','.edit-issue',function(event){
     event.preventDefault();
     let issue_id = $(this).attr('id');
@@ -291,8 +340,8 @@ function handleForm() {
       .then( responseJson => {
         //console.log(responseJson);
         populateForm(responseJson); //intial array of contributors is here.
-        mydialog.dialog("open");
-        mydialog.dialog({buttons: {"Edit":  editIssue}})
+        taskDialog.dialog("open");
+        taskDialog.dialog({buttons: {"Edit":  editIssue}})
         $( "#dialog-form-div").dialog({title: 'Edit task'});
       })
       .catch(err => {
@@ -301,7 +350,7 @@ function handleForm() {
     
   })
 
-
+//Create a new category option.
   $('#add-new-category-option').on('click', function (event) {
     event.preventDefault();
     let option_to_add = $('#new-category').val();
@@ -317,6 +366,7 @@ function handleForm() {
     //add a line that will let the user know that the value has been added.
   });
 
+  //create a new contributor option.
   $("#add-new-contributor").on('click', function (event) {
     event.preventDefault();
     let fname = $("#firstName").val();
@@ -337,7 +387,9 @@ function handleForm() {
 
   });
 
+  //Save a contributor to a task
   $("#add-contributor").on('click', function (event) {
+    alert('aha');
     event.preventDefault();
     // let $_contributors_to_add_list = $("#contributors-to-add");
     let $_contributor_to_add = $("#form-contributors").val();
@@ -358,6 +410,7 @@ function handleForm() {
 
   })
 
+  //remove a contributor from a task
   $('#contributors-to-add').on('click', '.remove-contributor', function (event) {
     event.preventDefault();
     $(this).closest('div').remove();
@@ -365,15 +418,16 @@ function handleForm() {
   })
 
  
-
+//open a the task dialog
   $("#add-issue-button").on("click", function (event) {
     event.preventDefault();
-    mydialog.dialog("open");
+    taskDialog.dialog("open");
     $("#dialog-form-div").dialog({title: 'Add a new task'});
-    mydialog.dialog({buttons: {"Save":  addIssue}})
+    taskDialog.dialog({buttons: {"Save":  addIssue}})
 
   });
 
+  //Open/close a task
   $("#issueslist").on('click','.status-area', function (event) {
     event.preventDefault();
 
@@ -402,6 +456,7 @@ function handleForm() {
     })
   });
 
+  //Open a comment dialog and fetch and display previous comments.
   $("#issueslist").on('click', '.comment-lnk', function (event) {
     event.preventDefault();
     $('.previous-comments').empty();
@@ -438,7 +493,7 @@ function handleForm() {
 
 function openPage() {
   // console.log('in open page');
-  displayListOfIssues();
+  displayAllIssuesOnOpen();
   createCategoryPullDowns();
   createContributorsPullDowns();
   handleForm();
