@@ -10,6 +10,13 @@ function to_string_date(dt) {
   return dt.split('T')[0];
 }
 
+function shortenDescription(desc){
+  if (desc.length < 150)
+  return desc;
+  let short_desc = desc.substring(0,180);
+  return short_desc;
+}
+
 function generateIssueCard(issue) {
   let created_at_string = to_string_date(issue.created);
   let issue_due_string = to_string_date(issue.due);
@@ -20,30 +27,74 @@ function generateIssueCard(issue) {
     var status_lnk = 'closed-issue';
     var icon_lnk = `${icon_lnk_close}`
   }
+  let issue_description = issue.description;
+  console.log(`1 ${issue.status}`);
+  var status_color = '';
+  switch(`${issue.status}`){
+    case 'overdue':
+      status_color = 'overdue-color';
+    break;
+    case 'pending':
+      status_color = 'pending-color';
+    break;
+    case 'due':
+      status_color = 'due-color';
+    break;
+  }
+  let shortDescription = shortenDescription(issue_description);
+  if(issue_description.length != shortDescription.length){
+    var indexOfSpace = shortDescription.indexOf(" ",150)
+    shortDescription = shortDescription.substring(0,152);
+    var description_html = `<span class="description-text">${shortDescription} <a href="#" class="edit-issue" id="${issue.id}">...more</a></span>`;
+  }
+  else
+    description_html = `<span class="description-text">${shortDescription}</span>`
+
   return `
-      <div class="issues-strip">
-        <div class="status-info">
-          <div class="status-text">${issue.status}</div>
-          <div class="status-area">
-            <a href="" class="${status_lnk}" id="co_icon_${issue.id}">${icon_lnk}</a>
+  <div class="issue-card">
+  <div class="issue-header">
+      <div class="_title">${issue.title}</div>
+      <div class="_tools">
+          <div class="status-badge ${status_color}"><span>${issue.status}</span></div>
+          <div class="tools-icon">
+              <div><i class="fas fa-user-friends"></i></div>
+              <div><a href="#" class="edit-issue" id="${issue.id}"><i class="fas fa-edit"></i></a></div>
+              <div><a href="" class="comment-lnk" id="${issue.id}"><i class="fa fa-comments badge" aria-hidden="true" ></i></a></div>
+              <div class="status-icon"><a href="" class="${status_lnk}" id="co_icon_${issue.id}">${icon_lnk}</a></i></div>
           </div>
-        </div>
-        <div class="issue-info">
-          <div class="issue-title">${issue.title}</div>
-          <div class="issue-desc">${issue.description}</div>
-          <div class="issue-dates">created : ${created_at_string}, due: ${issue_due_string}</div>
-        </div>
-        <div class="issue-tools">
-          <div class="edit-icon">
-            <a href="#" class="edit-issue" id="${issue.id}"><i class="fas fa-edit"></i></a>
-          </div>
-          <div class="comment-icon">
-            <a href="" class="comment-lnk" id="${issue.id}"><i class="fa fa-comments badge" aria-hidden="true" ></i></a>
-          </div>
-        </div>
       </div>
+  </div>
+  <div class="issue-desc">
+    ${description_html}
+    </div>
+  <div class="issue-dates">
+      created : ${created_at_string}, due: ${issue_due_string}
+  </div>
+</div>
   `
 }
+
+// <div class="issues-strip">
+      //   <div class="status-info">
+      //     <div class="status-text">${issue.status}</div>
+      //     <div class="status-area">
+      //       <a href="" class="${status_lnk}" id="co_icon_${issue.id}">${icon_lnk}</a>
+      //     </div>
+      //   </div>
+      //   <div class="issue-info">
+      //     <div class="issue-title">${issue.title}</div>
+      //     <div class="issue-desc">${issue.description}</div>
+      //     <div class="issue-dates">created : ${created_at_string}, due: ${issue_due_string}</div>
+      //   </div>
+      //   <div class="issue-tools">
+      //     <div class="edit-icon">
+      //       <a href="#" class="edit-issue" id="${issue.id}"><i class="fas fa-edit"></i></a>
+      //     </div>
+      //     <div class="comment-icon">
+      //       <a href="" class="comment-lnk" id="${issue.id}"><i class="fa fa-comments badge" aria-hidden="true" ></i></a>
+      //     </div>
+      //   </div>
+      // </div>
 
 function generateCommentContainer(){
     return `
@@ -92,7 +143,7 @@ function createCategoryPullDowns() {
       })
     })
 }
-
+ 
 function createContributorsPullDowns() {
 
   let $_lead_contributor = $("#lead_contributor");
@@ -130,31 +181,10 @@ function populateForm(issue){
   $('#form_category').val(issue.category);
   let dt = issue.due_date.split('T')[0];
   $("#issue_due_date").val(dt);
-  console.log(`populate ---> ${issue.lead}`);
   var uname = fetchContributorsByName(issue.lead);
-  console.log('from fetch function '+uname.username);
   $('#lead_contributor').val(uname._id);
 
-  // $('#contirbutors-to-add').val(issue.contributors);
-  // console.log(issue.contributors[0]);
-  // console.log(issue.contributors);
-  // let username_arr = [];
-  // issue.contributors.forEach(elem =>{ 
-  //   contributorObjArr.find( e => {
-  //     if( e._id === elem )
-  //       username_arr.push(e.username);
-  //   } )
 
-  // })
-  //Get the number of users already displayed
-  // let contributor_num = $('#contributors-to-add').children().length;
-  // username_arr.forEach(elem => {  
-  //   displaySelectedContributor(elem);
-  // })
-
-  // console.log(username_arr);
-
-  // console.log(contributorObjArr[0]._id);
 }
 
 function displaySelectedContributor(contributor){
@@ -194,7 +224,6 @@ function addComment() {
   })
   .then(responseJson => {
     let commentArr = responseJson.follow_up;
-    // console.log(commentArr[commentArr.length-1]);
     displayComments(responseJson.follow_up[responseJson.follow_up.length -1]);
   })
   .catch(err => {
@@ -216,8 +245,12 @@ function addIssue() {
   // console.log(data);
   $.post(
     '/issues', data,
-    function (data) {}
+    function (data) {
+      $('issueslist').prepend(data);
+    }
   )
+  taskDialog.dialog('close');
+
 }
 
 function editIssue(){
@@ -289,11 +322,14 @@ function editIssue(){
 
 
   $('#status_pd_filter').change(function(){
-    let _status = $(this).val() || 'all'
-    let _category = $('#category_pd_filter').val() || 'all'
+    let _status = $(this).val() || 'all';
+    console.log(`1 ${_status}`);
+    let _category = $('#category_pd_filter').val() || 'all';
+    console.log(`2 ${_category}`);
     fetch(`/issues/filter/${_status}/${_category}`)
       .then( response => {
         if(response.ok){
+          console.log('ok')
           return response.json();
         }
         throw new Error(response.statusText);
@@ -308,8 +344,8 @@ function editIssue(){
   });
 
   $('#category_pd_filter').change(function(){
-    let _category = $('#category_pd_filter').val() || 'all'
-    let _status = $(this).val() || 'all'
+    let _category = $('#category_pd_filter').val() || 'all';
+    let _status = $('#status_pd_filter').val() || 'all';
     fetch(`/issues/filter/${_status}/${_category}`)
       .then( response => {
         if(response.ok){
@@ -428,7 +464,7 @@ function editIssue(){
   });
 
   //Open/close a task
-  $("#issueslist").on('click','.status-area', function (event) {
+  $("#issueslist").on('click','.status-icon', function (event) {
     event.preventDefault();
 
     let issue_id = ($(this).children().attr('id')).substring(8);   
@@ -452,6 +488,8 @@ function editIssue(){
         else{
           $(co_selector).attr('class','closed-issue').html(`<i class="fas fa-window-close"></i>`);
         }
+
+
       }
     })
   });
@@ -492,7 +530,6 @@ function editIssue(){
 }
 
 function openPage() {
-  // console.log('in open page');
   displayAllIssuesOnOpen();
   createCategoryPullDowns();
   createContributorsPullDowns();

@@ -46,7 +46,7 @@
                     <label for="category_pd_filter" id="category-pd-label">Category
                         <select id="category_pd_filter" class="text ui-widget-content ui-corner-all">
                             <option value=""></option>
-                            
+
                         </select>
                     </label>
                 </div>
@@ -55,6 +55,26 @@
 
         <section role="region" class="row">
             <div id="issueslist">
+                <!-- <div class="issue-card">
+                    <div class="issue-header">
+                        <div class="_title">Title</div>
+                        <div class="_tools">
+                            <div class="status-badge"><span>Pending</span></div>
+                            <div class="tools-icon">
+                                <div><i class="fas fa-user-friends"></i></div>
+                                <div><i class="fas fa-edit"></i></div>
+                                <div><i class="fa fa-comments badge" aria-hidden="true"></i></div>
+                                <div><i class="fas fa-window-close"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="issue-desc">
+                        Description of the issue...
+                    </div>
+                    <div class="issue-dates">
+                            Dates of the issue...
+                        </div>
+                </div> -->
             </div>
         </section>
 
@@ -106,7 +126,7 @@
                             <div class="flex-elems-hor">
 
                                 <div id="contributors-list-container">
-                                    <label for="form_contributors">Contributors</label>
+                                    <label for="lead_contributor">Lead Contributor</label>
                                     <div class="select-list">
                                         <div class="select-list-first-elem">
                                             <div>
@@ -115,11 +135,11 @@
                                                 </select>
                                             </div>
 
-                                            
+
                                         </div>
                                     </div>
                                 </div>
-                               
+
                             </div>
                         </fieldset>
                     </form>
@@ -138,31 +158,31 @@
 
                 </div>
                 <div id="create-contributor-tab" style="display:flex;flex-direction: row;">
-                        <div class="flex-elems-ver">
+                    <div class="flex-elems-ver">
 
-                                <div id="contributors-list-container">
-                                    <label for="form_contributors">Contributors</label>
-                                    <div class="select-list">
-                                        <div class="select-list-first-elem">
-                                            <div>
-                                                <select name="form_contributors" id="form_contributors"
-                                                    class="form-contributors text ui-widget-content ui-corner-all">
-        
-                                                </select>
-                                            </div>
-        
-                                            <div>
-                                                <a href="" id="add-contributor"><i class="fas fa-plus-circle"></i></a>
-                                            </div>
-                                        </div>
+                        <div id="contributors-list-container">
+                            <label for="form_contributors">Contributors</label>
+                            <div class="select-list">
+                                <div class="select-list-first-elem">
+                                    <div>
+                                        <select name="form_contributors" id="form_contributors"
+                                            class="form-contributors text ui-widget-content ui-corner-all">
+
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <a href="" id="add-contributor"><i class="fas fa-plus-circle"></i></a>
                                     </div>
                                 </div>
-                                <div id="contributors-to-add" style="display: flex; flex-direction: column;">
-                                </div>
-                                <div id="contributors-to-add" style="display: flex; flex-direction: column;">
-                                </div>
                             </div>
-                    <div class="flex-elems-ver" style: >
+                        </div>
+                        <div id="contributors-to-add" style="display: flex; flex-direction: column;">
+                        </div>
+                        <div id="contributors-to-add" style="display: flex; flex-direction: column;">
+                        </div>
+                    </div>
+                    <div class="flex-elems-ver" style:>
                         <label for="firstName">First name</label>
                         <input type="text" name="firstName" id="firstName" class="text ui-widget-content ui-corner-all">
                         <label for="lastName">Last name</label>
@@ -173,7 +193,7 @@
                         <div id="contributor-add-message">Added</div>
                         <button id="add-new-contributor">Save</button>
                     </div>
-                    
+
 
                 </div>
             </div>

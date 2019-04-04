@@ -4,6 +4,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const moment = require('moment');
 
+
 const {
     DATABASE_URL,
     PORT
@@ -31,6 +32,7 @@ app.get('/', function (request, response) {
 
 
 app.get('/issues', (req, res) => {
+
 
     IssueModel
         .find()
@@ -91,11 +93,11 @@ app.get('/issues/:issue_id/comments', (req, res) => {
 
 
 app.get('/issues/filter/:status/:category', (req, res) => {
-    let dt = new Date();
-    dt = dt.toISOString();
-    dt = dt.split('T')[0];
-    let due_date = 
+    let dt = moment().utcOffset(-4).format('YYYY-MM-DD');
+    // dt = dt.toISOString();
+    // dt = dt.split('T')[0];
     console.log(dt);
+
     const _status = req.params.status;
     console.log(_status);
     const _categ = req.params.category || 'all';
@@ -240,86 +242,41 @@ app.post('/issues', (req, res) => {
     //         username: current
     //     }; (this is needed in the contributors section)
 
-        ContributorModel
-            .findById(_lead_contributor)
-            .then(contributor => {
-                if(contributor){
-                    IssueModel
+    ContributorModel
+        .findById(_lead_contributor)
+        .then(contributor => {
+            if (contributor) {
+                IssueModel
                     .create({
-                                title: _title,
-                                description: _description,
-                                created_at: _created_at_now,
-                                category: _category,
-                                due_date: _due_date,
-                                open: true,
-                                lead: _lead_contributor
+                        title: _title,
+                        description: _description,
+                        created_at: _created_at_now,
+                        category: _category,
+                        due_date: _due_date,
+                        open: true,
+                        lead: _lead_contributor
                     })
                     .then(issue => {
                         res.status(201).json(issue.serialize());
                     })
                     .catch(err => {
                         console.error(err);
-                        res.status(500).json({error: 'Something is wrong with the post issues endpoint..'})
+                        res.status(500).json({
+                            error: 'Something is wrong with the post issues endpoint..'
+                        })
                     })
-                }else{
-                    const message = 'Contributor not found';
-                    console.error(message);
-                    return res.status(400).send(message);
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                res.status(500).json({message: 'Someting is wrong with finding a contributor by Id..'});
-            })
-    //     ContributorModel
-    //         .find(query)
-    //         .then(contributor => {
-    //             //console.log(contributor[0]._id);
-    //             let contributorObj = {
-    //                 _id: contributor[0]._id
-    //             };
-    //             _contributors.push(contributorObj);
-    //         })
-    //         .catch(err => {
-    //             console.error(err);
-    //             res.status(501).json({
-    //                 Error: 'Something went wrong with finding a contributor'
-    //             });
-    //         })
-    // // }
-
-    //console.log(_contributors);   
-    // IssueModel
-    //     .create({
-    //         title: _title,
-    //         description: _description,
-    //         created_at: _created_at_now,
-    //         category: _category,
-    //         due_date: _due_date,
-    //         open: true,
-
-    //     })
-    //     .then(issue =>
-    //         IssueModel.where({
-    //             _id: issue._id
-    //         })
-    //         .update({
-    //             $set: {
-    //                 contributors: _contributors
-    //             }
-    //         })
-    //         .then(updatedIssue => {
-    //             res.status(201).json({
-    //                 message: 'All is well'
-    //             })
-    //         })
-    //     )
-    //     .catch(err => {
-    //         console.error(err);
-    //         res.status(500).json({
-    //             error: 'Someting went wrong in the post /issues endpoint'
-    //         });
-    //     })
+            } else {
+                const message = 'Contributor not found';
+                console.error(message);
+                return res.status(400).send(message);
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).json({
+                message: 'Someting is wrong with finding a contributor by Id..'
+            });
+        })
 });
 
 app.post('/issues/:issue_id/comments', (req, res) => {
@@ -335,20 +292,20 @@ app.post('/issues/:issue_id/comments', (req, res) => {
     IssueModel
         .findByIdAndUpdate(issue_id, {
             $push: {
-                    follow_up: { $each : [ _commentObj ],
-                    $sort: {created_at: 1}
+                follow_up: {
+                    $each: [_commentObj],
+                    $sort: {
+                        created_at: 1
+                    }
                 }
             }
         })
-        .then(issue =>{
-            //console.log(issue.length); 
-            res.status(201).send(
-                {
-                    _id: issue_id,
-                    title: issue.title,
-                    follow_up: issue.follow_up
-                }
-            );
+        .then(issue => {
+            res.status(201).send({
+                _id: issue_id,
+                title: issue.title,
+                follow_up: issue.follow_up
+            });
         })
         .catch(err => {
             console.error(err);
@@ -398,7 +355,7 @@ app.post('/contributor', (req, res) => {
         })
 })
 
-app.put('/issues/:issue_id', (req,res)=>{
+app.put('/issues/:issue_id', (req, res) => {
 
     let issue_id = req.params.issue_id;
 
@@ -407,39 +364,50 @@ app.put('/issues/:issue_id', (req,res)=>{
     updated.description = req.body.form_issue_description;
     updated.category = req.body.form_category;
     updated.due_date = req.body.issue_due_date;
-    updated.lead= req.body.lead_contributor;
+    updated.lead = req.body.lead_contributor;
 
     IssueModel
-    .findByIdAndUpdate(issue_id,{$set: updated})
-    .then(updatedIssue => {
-        console.log(updatedIssue);
-        res.status(200).json(updatedIssue.serialize());
-    })
-    .catch(err => {
-        console.error(err);
-        res.status(500).json({message: 'Something went wrong with updating the issue..'});
-    })
+        .findByIdAndUpdate(issue_id, {
+            $set: updated
+        })
+        .then(updatedIssue => {
+            console.log(updatedIssue);
+            res.status(200).json(updatedIssue.serialize());
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).json({
+                message: 'Something went wrong with updating the issue..'
+            });
+        })
 })
 
 app.put('/issues/:issue_id/status/:status', (req, res) => {
     let issue_id = req.params.issue_id;
     let status_request = req.params.status;
-    if(status_request == 'closed-issue')
+    if (status_request == 'closed-issue')
         change_status_to = true;
-        else change_status_to = false;
+    else change_status_to = false;
 
     IssueModel
-    .findByIdAndUpdate(issue_id,
-        { $set : {open : `${change_status_to}` }
-    })
-    .then( issue => {
-        //console.log(issue);
-        res.status(201).json({id: issue_id, open: `${change_status_to}`})
-    })
-    .catch(err => {
-        console.error(err);
-        res.status(500).json({message: 'Something went wrong editing the status'});
-    })
+        .findByIdAndUpdate(issue_id, {
+            $set: {
+                open: `${change_status_to}`
+            }
+        })
+        .then(issue => {
+            //console.log(issue);
+            res.status(201).json({
+                id: issue_id,
+                open: `${change_status_to}`
+            })
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).json({
+                message: 'Something went wrong editing the status'
+            });
+        })
 
     // console.log(`from status endpoint, status is: ${open}`);
 

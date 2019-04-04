@@ -53,18 +53,20 @@ const IssueSchema = mongoose.Schema({
 });
 
 IssueSchema.virtual('status_virtual').get(function(){
-    var today = moment().format('YYYY-MM-DD');
-    var due = moment(this.due_date).format('YYYY-MM-DD');;
-
+    var today =moment().utcOffset(-4).format('YYYY-MM-DD');
+    //console.log(today);
+    //var today = moment().format('YYYY-MM-DD');
+    var due = moment(this.due_date).utcOffset(-4).format('YYYY-MM-DD');;
     if( moment(due).isAfter(today) )
-        return `pending`
+        return `pending`;
     else if ( moment(due).isBefore(today) )
-        return `overdue`
-    else if( moment(due).isSame(today))
-        return `due`
+        return `overdue`;
+    else if( moment(due).isSame(today)){
+        return `due`;
+
+    }
 })
 
-IssueSchema.virtual('due_date_virtual')
 
 // IssueSchema.pre('find',function(next){
 //     this.populate({path: 'contributors'})
