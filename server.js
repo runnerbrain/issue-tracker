@@ -32,10 +32,12 @@ app.get('/', function (request, response) {
 
 
 app.get('/issues', (req, res) => {
-
+    let _sortcreated = '-1';
+    let query_sort = {created_at: _sortcreated};
 
     IssueModel
         .find()
+        .sort(query_sort)
         .then(issues => {
             //console.log(issues);
             res.json(issues.map(issue => issue.serialize()));
@@ -67,7 +69,7 @@ app.get('/issues/:issue_id', (req, res) => {
 
 app.get('/issues/:issue_id/comments', (req, res) => {
     let _issue_id = req.params.issue_id;
-
+   
     IssueModel
         .findById(_issue_id, {
             '_id': 0,
@@ -92,15 +94,15 @@ app.get('/issues/:issue_id/comments', (req, res) => {
 });
 
 
-app.get('/issues/filter/:status/:category', (req, res) => {
+app.get('/issues/filter/:status/:category/:sortcreated', (req, res) => {
+
     let dt = moment().utcOffset(-4).format('YYYY-MM-DD');
-    // dt = dt.toISOString();
-    // dt = dt.split('T')[0];
-    console.log(dt);
 
     const _status = req.params.status;
-    console.log(_status);
     const _categ = req.params.category || 'all';
+    let _sortcreated = req.params.sortcreated || 'desc';
+    if(_sortcreated == 'desc') _sortcreated = '-1';
+    else _sortcreated = '1';
     let query = {};
     if (_status !== '' && _status !== 'all') {
         var query1;
@@ -133,8 +135,11 @@ app.get('/issues/filter/:status/:category', (req, res) => {
         query.category = _categ;
     }
 
+    query_sort = {created_at: _sortcreated};
+    console.log(query);
     IssueModel
         .find(query)
+        .sort(query_sort)
         .then(issues => {
             res.json(issues.map(issue => issue.serialize()));
         })
@@ -144,7 +149,8 @@ app.get('/issues/filter/:status/:category', (req, res) => {
                 error: "Something went wrong in the /issues/:status/:catgory endpoint"
             });
         })
-})
+});
+
 
 app.get('/contributors', (req, res) => {
     ContributorModel
@@ -177,49 +183,6 @@ app.get('/categories', (req, res) => {
             });
         })
 })
-
-
-
-
-// app.get('/issues/:filter',(req,res)=>{
-//     const dueArray = ["due","overdue","pending"];
-//     const categArray = ["categ1","categ2","categ3"];
-//     const _filter = req.params.filter;
-
-//     // let currentDate = new Date();
-//     let due_param = dueArray.indexOf(_filter);
-//     let categ_param = categArray.indexOf(_filter);
-//     //console.log(due_param);
-//     if(due_param >= 0){
-//         let due_filter = _filter;
-//         switch (due_filter) {
-//             case 'due':
-//                 query = {due_date: {'$eq': new Date()}};
-//             break;
-//             case 'overdue':
-//                 query = {due_date: {'$lt': new Date()}};
-//             break;
-//             case 'pending':
-//                 query = {due_date: {'$gt': new Date()}};
-//             default:
-//                 break;
-//         }   
-//     }
-//     else if(categ_param >= 0){
-
-//     }
-//     console.log(query);
-//     IssueModel
-//     .find(query)
-//     .then(issues=> {
-//         res.json(issues.map(issue => issue.serialize()));
-//     })
-//     .catch(err => {
-//         console.error(err);
-//         res.status(500).json({error: 'Something is wrong'});
-//     });
-// });
-
 
 
 app.post('/issues', (req, res) => {
@@ -257,7 +220,7 @@ app.post('/issues', (req, res) => {
                         lead: _lead_contributor
                     })
                     .then(issue => {
-                        res.status(201).json(issue.serialize());
+                         res.status(201).json(issue.serialize());
                     })
                     .catch(err => {
                         console.error(err);
@@ -369,7 +332,7 @@ app.put('/issues/:issue_id', (req, res) => {
     IssueModel
         .findByIdAndUpdate(issue_id, {
             $set: updated
-        })
+        },{new: true})
         .then(updatedIssue => {
             console.log(updatedIssue);
             res.status(200).json(updatedIssue.serialize());
@@ -413,10 +376,23 @@ app.put('/issues/:issue_id/status/:status', (req, res) => {
 
 });
 
-app.put('/issues/:issue_id/:comment_id', (req, res) => {});
 
-app.delete('/issues/:issue_id', (req, res) => {});
-app.delete('/issues/:issue_id/:comment_id/', (req, res) => {})
+app.delete('/issues/:issue_id', (req, res) => {
+    let issue_id = req.params.issue_id;
+    console.log(issue_id);
+    IssueModel.findByIdAndDelete(issue_id)
+    .then( () => {
+        res.status(204).json({message : 'Successfully deleted..'});
+    }) 
+    .catch(err => {
+        console.error(err);
+        res.status(500).json({message: 'Something went wrong with deleting a task..'});
+    })
+});
+
+app.delete('/issues/:issue_id/:comment_id/', (req, res) => {
+    
+})
 
 
 let server;

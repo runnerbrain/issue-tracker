@@ -15,10 +15,6 @@ i{
   color: rgb(95,163,219);
 }
 
-a:hover i{
-  font-size: larger;
-}
-
 fieldset{
   border: 0;
 }
@@ -78,9 +74,9 @@ fieldset{
       align-items: center;
     } 
 
-   #sort-a-d{
+   #sort-created{
     display: flex;
-    font-size: 72px;
+    font-size: 64px;
     padding: 0 20px 0 20px;
     line-height: 75px;
     align-items: center;
@@ -138,7 +134,7 @@ fieldset{
     /* flex-grow: 1; */
     color: rgb(100, 130, 182);    
     margin-top: 10px;
-    flex-grow: 8;
+    width: 75%;
     justify-content: flex-start;
     margin-left: 10px;
   }
@@ -148,8 +144,9 @@ fieldset{
   height: 40px;
   background: rgb(243, 215, 163);
     flex-direction: row;
-    flex-grow: 2;
-    width: 80px;
+    /* flex-grow: 2; */
+    
+    width: 25%;
     justify-content: flex-end;
     border-bottom-left-radius: 20px;
     box-shadow: 0 3px 6px rgba(0,0,0,0.25), 0 3px 3px rgba(0,0,0,0.4);
@@ -201,6 +198,7 @@ fieldset{
     display: flex;
     justify-content: flex-end;
     align-self: flex-end;
+    padding-right: 3px;
   }
 
 
@@ -240,7 +238,6 @@ fieldset{
     font-family: 'Archivo', sans-serif;
     font-weight: bold;
     display: flex;
-    /* flex-grow: 1; */
     color: rgb(100, 130, 182);
     margin-top: 10px;
   }
@@ -258,6 +255,8 @@ fieldset{
     justify-content: flex-end;
     align-self: flex-end;
   }
+
+  
 
   .issues-strip > .issue-tools{
     display: flex;
@@ -381,10 +380,9 @@ label{
     margin-right: 5px;
   }
   
-  #new-category-container{
+  #new-category-container,#new-contributor-container{
     display: flex;
-    align-items: center; 
-    justify-content: flex-start;  
+    
   }
 
   #new-category-container:nth-child(2){
@@ -395,8 +393,22 @@ label{
     display: none;
   }
 
-  #category-add-message,#contributor-add-message{
-    display: none;
+ #category-add-message{
+    display: flex;
+    align-items: flex-end; 
+    justify-content: flex-end;
+    margin-left: 30px;
+    visibility: hidden;
+    color: green;
+  } 
+
+  #contributor-add-message{
+    display: flex;
+    align-items: center; 
+    justify-content: center;
+    margin-left: 30px;
+    visibility: hidden;
+    color: green;
   }
 
   button{
@@ -427,8 +439,6 @@ label{
     font-size: 12px;
   }
 
-
-
   .comment-container{
     display: flex;
     flex-direction: column;
@@ -446,21 +456,6 @@ label{
     align-self: flex-end;
   }
 
-/* .badge:after{
-    content:"3";
-    position: absolute;
-    background: rgba(0,0,255,1);
-    height:2rem;
-    top:1rem;
-    right:1.5rem;
-    width:2rem;
-    text-align: center;
-    line-height: 2rem;;
-    font-size: 1rem;
-    border-radius: 50%;
-    color:white;
-    border:1px solid blue;
-} */
 ::placeholder {
   color: #666;
   font-size: 12px;
@@ -477,3 +472,8 @@ label{
 .pending-color{
   background: rgb(72, 134, 72);
 }
+
+.closed-color{
+  background: black;
+}
+

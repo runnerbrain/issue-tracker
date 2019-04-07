@@ -29,8 +29,8 @@
 
 
             <div class="issue-filters">
-                <div id="sort-a-d">
-                    <i class="fas fa-sort"> </i>
+                <div id="sort-created">
+                    <a href="#" id="sort-created-lnk"><i class="fas fa-sort"> </i></a>
                 </div>
                 <div id="due-by">
                     <label for="status_pd_filter" id="status-label">Status
@@ -152,13 +152,13 @@
                                 class="text ui-widget-content ui-corner-all">
                         </div>
 
-                        <div id="category-add-message">added</div>
+                        <div id="category-add-message">Added..</div>
                     </div>
                     <button id="add-new-category-option">Save</button>
 
                 </div>
                 <div id="create-contributor-tab" style="display:flex;flex-direction: row;">
-                    <div class="flex-elems-ver">
+                    <!-- <div class="flex-elems-ver">
 
                         <div id="contributors-list-container">
                             <label for="form_contributors">Contributors</label>
@@ -181,24 +181,33 @@
                         </div>
                         <div id="contributors-to-add" style="display: flex; flex-direction: column;">
                         </div>
-                    </div>
-                    <div class="flex-elems-ver" style:>
-                        <label for="firstName">First name</label>
-                        <input type="text" name="firstName" id="firstName" class="text ui-widget-content ui-corner-all">
-                        <label for="lastName">Last name</label>
+                    </div> -->
+                        <div id="new-contributor-container">
+                            <div>
+                                <label for="firstName">First name</label>
+                                <input type="text" name="firstName" id="firstName"
+                                    class="text ui-widget-content ui-corner-all">
+                                <label for="lastName">Last name</label>
 
-                        <input type="text" name="lastName" id="lastName" class="text ui-widget-content ui-corner-all">
-                        <label for="username">Username</label>
-                        <input type="text" name="username" id="username" class="text ui-widget-content ui-corner-all">
-                        <div id="contributor-add-message">Added</div>
-                        <button id="add-new-contributor">Save</button>
-                    </div>
+                                <input type="text" name="lastName" id="lastName"
+                                    class="text ui-widget-content ui-corner-all">
+                                <label for="username">Username</label>
+                                <input type="text" name="username" id="username"
+                                    class="text ui-widget-content ui-corner-all">
+                                <button id="add-new-contributor">Save</button>
+                            </div>
+                        </div>
+
+                        <div id="contributor-add-message">Added..</div>
 
 
                 </div>
             </div>
 
         </div>
+        <div id="confirm-task-delete" title="Delete the task permanently?">
+            <p><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>The task will be permanently deleted and cannot be recovered. Are you sure?</p>
+          </div>
     </main>
 
 

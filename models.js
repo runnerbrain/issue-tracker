@@ -53,9 +53,8 @@ const IssueSchema = mongoose.Schema({
 });
 
 IssueSchema.virtual('status_virtual').get(function(){
+
     var today =moment().utcOffset(-4).format('YYYY-MM-DD');
-    //console.log(today);
-    //var today = moment().format('YYYY-MM-DD');
     var due = moment(this.due_date).utcOffset(-4).format('YYYY-MM-DD');;
     if( moment(due).isAfter(today) )
         return `pending`;
@@ -67,19 +66,6 @@ IssueSchema.virtual('status_virtual').get(function(){
     }
 })
 
-
-// IssueSchema.pre('find',function(next){
-//     this.populate({path: 'contributors'})
-// })
-
-// IssueSchema.pre('findById',function(next){
-//     this.populate('contributors')
-// })
-
-
-// IssueSchema.pre('findByIdAndUpdate',function(next){
-//     this.populate('contributors')
-// })
 
 IssueSchema.methods.serialize = function(){
     // console.log(`from Model ${this}`);
