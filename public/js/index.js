@@ -313,18 +313,24 @@ function handleForm() {
       .done(function (returnedData) {
         let issue_card_id = `#ic_${returnedData.id}`;
         let updatedIssue = displayNewIssue(returnedData);
-        $(issue_card_id).parent().html(updatedIssue);
+        $(issue_card_id).parent().html(updatedIssue); //traverse needed to drill down to the div that needs to be re-displayed
       });
     taskDialog.dialog('close');
   }
 
-  // function reopenIssue(id){
-  //   fetch('/issues/${issue_id}/due_date')
-  //   .then(response => response.json())
-  //   .then((IssueArr) => {
-  //     displayListOfIssues(IssueArr)
-  //   });
-  // }
+
+  function reopenIssue(id){
+    console.log('In reopen issue'+id);
+    fetch(`/issues/${id}/reopen`)
+    .then(response => response.json())
+    .then(responseJson => {
+      console.log(responseJson.id);
+      let issue_card_id = `#ic_${responseJson.id}`;
+      let updatedIssue = displayNewIssue(responseJson);
+      $(issue_card_id).parent().html(updatedIssue);
+
+    });
+  }
 
   $("#sort-created-lnk").on('click', function (event) {
     event.preventDefault();
@@ -521,7 +527,7 @@ function handleForm() {
 
         if (open_status === 'true') {
           $(co_selector).attr('class', 'open-issue').html(`${icon_lnk_open}`);
-          // let badge_color_status = reopenIssue(issue_id);
+          reopenIssue(issue_id);
           // $.ajax({
           //   url: `/issues/${issue_id}/due-date`,
           //   data:{

@@ -151,6 +151,22 @@ app.get('/issues/filter/:status/:category/:sortcreated', (req, res) => {
         })
 });
 
+app.get('/issues/:issue_id/reopen', (req,res) => {
+    let issue_id = req.params.issue_id;
+    console.log(issue_id);
+    IssueModel
+        .findById( issue_id)
+        .then(issue => {
+            // console.log(issue.serialize());
+            res.json(issue.serialize());
+        })
+        .catch(err => {
+            res.status(500).send({
+                error: "Something went wrong with status endpoint."
+            })
+        })
+})
+
 
 app.get('/contributors', (req, res) => {
     ContributorModel
