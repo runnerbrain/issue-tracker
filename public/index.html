@@ -17,7 +17,8 @@
 
 <body>
     <div class="banner">
-        <p>Issue Tracker</p>
+            <img class="logo-img" src="./issue_tracker_log.png" ALT="align box" ALIGN=CENTER>
+       
     </div>
     <main>
         <section role="region" class="flex-container">
@@ -29,9 +30,12 @@
 
 
             <div class="issue-filters">
-                <div id="sort-created">
+                <div id="sort-created" title="Sort by Date created">
                     <a href="#" id="sort-created-lnk"><i class="fas fa-sort"> </i></a>
                 </div>
+                <div id="list-all" title="Display all isssues">
+                    <a href="#" id="list-all"><i class="fas fa-list"></i></a>
+                </div>  
                 <div id="due-by">
                     <label for="status_pd_filter" id="status-label">Status
                         <select id="status_pd_filter" class="text ui-widget-content ui-corner-all">
@@ -50,31 +54,12 @@
                         </select>
                     </label>
                 </div>
+                
             </div>
         </section>
 
         <section role="region" class="row">
             <div id="issueslist">
-                <!-- <div class="issue-card">
-                    <div class="issue-header">
-                        <div class="_title">Title</div>
-                        <div class="_tools">
-                            <div class="status-badge"><span>Pending</span></div>
-                            <div class="tools-icon">
-                                <div><i class="fas fa-user-friends"></i></div>
-                                <div><i class="fas fa-edit"></i></div>
-                                <div><i class="fa fa-comments badge" aria-hidden="true"></i></div>
-                                <div><i class="fas fa-window-close"></i></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="issue-desc">
-                        Description of the issue...
-                    </div>
-                    <div class="issue-dates">
-                            Dates of the issue...
-                        </div>
-                </div> -->
             </div>
         </section>
 

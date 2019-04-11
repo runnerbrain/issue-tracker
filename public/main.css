@@ -3,22 +3,26 @@ body{
     box-sizing: border-box;
     margin: 0;
     background:#ebedee;
+   
         /* background-image: url("paper.gif"); */
         /* background-color: #cccccc; */
 }
 
-a:link {
+/* a:link {
   color: rgb(95, 163, 219)
-}
+} */
 
 i{
-  color: rgb(95,163,219);
+  color: rgb(64, 158, 77);
 }
 
 fieldset{
   border: 0;
 }
 
+a{
+  text-decoration: none;
+}
 /* Add a black background color to the top navigation */
 .banner {
     background-color: #333;
@@ -59,28 +63,31 @@ fieldset{
 
   .add-issue{
       display: flex;
-      flex-grow: 2;
+      flex-grow: 3;
       align-items: center;
   }
 
 
    .issue-filters{
       display: flex;
-      flex-grow: 8;
-      align-items: flex-end;
-      flex-direction: row;
+      flex-grow: 7;
       border-top: 1px solid #555;
       border-bottom: 1px solid #666;
       align-items: center;
+      justify-content: center;
     } 
 
-   #sort-created{
+   #sort-created,#list-all{
     display: flex;
     font-size: 64px;
     padding: 0 20px 0 20px;
     line-height: 75px;
     align-items: center;
     justify-content: center;
+  }
+
+  #list-all{
+    font-size: 42px;
   }
 
   .issue-filters > #status,#by-category{
@@ -477,3 +484,22 @@ label{
   background: black;
 }
 
+.logo-img{
+  width:120px; 
+  height: 120px;
+  margin-left: 10px; 
+}
+
+.no-issues-style{
+  display: flex;
+  justify-content: center;  
+  align-items: center;
+  font-size: 24px;
+  margin-top: 60px;
+  font-weight: bold;
+  color: #999;
+}
+
+#dialog-form-div,#dialog-comment-div,#confirm-task-delete{
+  display: none;
+}

@@ -40,6 +40,9 @@ function generateIssueCard(issue) {
     case 'due':
       status_color = 'due-color';
       break;
+    case 'closed':
+      status_color = 'closed-color';
+      break;
   }
   let shortDescription = shortenDescription(issue_description);
   if (issue_description.length != shortDescription.length) {
@@ -56,10 +59,10 @@ function generateIssueCard(issue) {
         <div class="_tools">
             <div class="status-badge ${status_color}"><span>${issue.status}</span></div>
             <div class="tools-icon">
-                <div><a href="#" class="edit-issue" id="${issue.id}"><i class="fas fa-edit"></i></a></div>
-                <div><a href="" class="comment-lnk" id="${issue.id}"><i class="fa fa-comments badge" aria-hidden="true" ></i></a></div>
-                <div class="status-icon"><a href="" class="${status_lnk}" id="co_icon_${issue.id}">${icon_lnk}</a></i></div>
-                <div><a href="#" class="delete-lnk" id="${issue.id}"><i class="fas fa-trash-alt"></i></a></div>
+                <div><a href="#" title="Edit" class="edit-issue" id="${issue.id}"><i class="fas fa-edit"></i></a></div>
+                <div><a href="" title="Add a comment" class="comment-lnk" id="${issue.id}"><i class="fa fa-comments badge" aria-hidden="true" ></i></a></div>
+                <div class="status-icon"><a title="Close/Re-Open issue" href="" class="${status_lnk}" id="co_icon_${issue.id}">${icon_lnk}</a></i></div>
+                <div><a href="#" title="Delete issue" class="delete-lnk" id="${issue.id}"><i class="fas fa-trash-alt"></i></a></div>
             </div>
         </div>
       </div>
@@ -97,10 +100,19 @@ function displayNewIssue(issue) {
   // $("#issueslist").prepend(new_issue);
 }
 
-function displayListOfIssues(issues) {
+function displayListOfIssues(issues,filter) {
+  let message;
+  if (filter == 'all')
+    message = 'No issues to deal with..';
+    else
+    message = 'No issues found..'
   $('#issueslist').empty();
+  if(issues.length == 0)
+    $('#issueslist').html(`<div>${message}</div>`).addClass('no-issues-style');
+
   issues.forEach(elem => {
     let new_issue = generateIssueCard(elem);
+    $('#issueslist').removeClass('no-issues-style');
     let new_container = $(`<div class="issue-container"></div>`).appendTo('#issueslist');
     $(new_issue).appendTo(new_container);
     // $("#issueslist").append(`<div class="issue-container"></div>`).append(new_issue);
@@ -111,7 +123,8 @@ function displayAllIssuesOnOpen() {
   fetch('/issues')
     .then(response => response.json())
     .then((IssueArr) => {
-      displayListOfIssues(IssueArr)
+      let filter = 'all';
+      displayListOfIssues(IssueArr,filter)
     });
 }
 
@@ -122,11 +135,16 @@ function createCategoryPullDowns() {
   fetch('/categories')
     .then(response => response.json())
     .then(categoryArr => {
+      if(categoryArr.length == 0)
+      $('#category_pd_filter').append(`<option value='no categories'>No categories yet</option>`);
+      
       categoryArr.forEach(elem => {
         let val = elem['category'];
+        $("#form_category option[value='no categories']").remove();
         $_form_category.append(`<option value='${val}'>${val}</option>`);
         $('#category_pd_filter').append(`<option value='${val}'>${val}</option>`);
       })
+    
     })
 }
 
@@ -193,6 +211,80 @@ function displaySelectedContributor(contributor) {
 
 }
 
+
+function addComment() {
+  let data = $("#add-comment").serialize();
+  let issue_id = $("#comment_issue_id").val();
+  $.post(`/issues/${issue_id}/comments`, data);
+  fetch(`/issues/${issue_id}/comments`)
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      }
+      throw new Error(response.statusText);
+    })
+    .then(responseJson => {
+      let commentArr = responseJson.follow_up;
+      displayComments(responseJson.follow_up[responseJson.follow_up.length - 1]);
+    })
+    .catch(err => {
+      console.error(err);
+    });
+
+  $("#issue_comment").val('');
+
+}
+
+function addIssue() {
+  $('#contributors-to-add').append(
+    `<input type='hidden'
+      name='contributor_number'
+      id='contributor_number'
+      value='${contributor_num}'>`)
+  let data = $("#issue-add-form").serialize();
+  $.post(
+    '/issues', data,
+    function (data) {
+      if( $('.issue-container').length == 0 )
+        $('#issueslist').removeClass('no-issues-style').empty();
+      let new_issue = displayNewIssue(data);  
+      let new_container = $(`<div class="issue-container"></div>`).appendTo('#issueslist');
+      $(new_container).prepend(new_issue).fadeIn();
+    }
+  )
+  $("#dialog-form-div").dialog('close');
+}
+
+function editIssue() {
+  let edit_data = $("#issue-add-form").serialize();
+  let issue_id = $("#edit_issue_id").val();
+  $.ajax({
+      url: `/issues/${issue_id}`,
+      data: edit_data,
+      type: 'PUT'
+    })
+    .done(function (returnedData) {
+      let issue_card_id = `#ic_${returnedData.id}`;
+      let updatedIssue = displayNewIssue(returnedData);
+      $(issue_card_id).parent().html(updatedIssue); //traverse needed to drill down to the div that needs to be re-displayed
+    });
+    $("#dialog-form-div").dialog('close');
+}
+
+
+function reopenIssue(id){
+  console.log('In reopen issue'+id);
+  fetch(`/issues/${id}/reopen`)
+  .then(response => response.json())
+  .then(responseJson => {
+    console.log(responseJson.id);
+    let issue_card_id = `#ic_${responseJson.id}`;
+    let updatedIssue = displayNewIssue(responseJson);
+    $(issue_card_id).parent().html(updatedIssue);
+
+  });
+}
+
 //---------------------------------------------------------------------------
 //---------------------------------------------------------------------------
 
@@ -256,81 +348,50 @@ function handleForm() {
   });
 
 
-  function addComment() {
-    //console.log('adding your comment');
-    let data = $("#add-comment").serialize();
-    let issue_id = $("#comment_issue_id").val();
-    //console.log('addComment -> ' + issue_id);
-    $.post(`/issues/${issue_id}/comments`, data);
-    fetch(`/issues/${issue_id}/comments`)
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw new Error(response.statusText);
-      })
-      .then(responseJson => {
-        let commentArr = responseJson.follow_up;
-        displayComments(responseJson.follow_up[responseJson.follow_up.length - 1]);
-      })
-      .catch(err => {
-        console.error(err);
-      });
+  $( "#list-all" ).tooltip({
+    show: {
+      effect: "slideDown",
+      delay: 250
+    }
+  });
 
-    $("#issue_comment").val('');
+  $( "#sort-created" ).tooltip({
+    show: {
+      effect: "slideDown",
+      delay: 250
+    }
+  });
 
-  }
-
-  function addIssue() {
-
-    $('#contributors-to-add').append(
-      `<input type='hidden'
-        name='contributor_number'
-        id='contributor_number'
-        value='${contributor_num}'>`)
-    let data = $("#issue-add-form").serialize();
-    // console.log(data);
-    $.post(
-      '/issues', data,
-      function (data) {
-        console.log(data);
-        let new_issue = displayNewIssue(data);
-        $("#issueslist").prepend(new_issue).fadeIn();
-      }
-    )
-    taskDialog.dialog('close');
-
-  }
-
-  function editIssue() {
-    let edit_data = $("#issue-add-form").serialize();
-    let issue_id = $("#edit_issue_id").val();
-    $.ajax({
-        url: `/issues/${issue_id}`,
-        data: edit_data,
-        type: 'PUT'
-      })
-      .done(function (returnedData) {
-        let issue_card_id = `#ic_${returnedData.id}`;
-        let updatedIssue = displayNewIssue(returnedData);
-        $(issue_card_id).parent().html(updatedIssue); //traverse needed to drill down to the div that needs to be re-displayed
-      });
-    taskDialog.dialog('close');
-  }
+  $( ".delete-lnk" ).tooltip({
+    show: {
+      effect: "slideDown",
+      delay: 250
+    }
+  });
 
 
-  function reopenIssue(id){
-    console.log('In reopen issue'+id);
-    fetch(`/issues/${id}/reopen`)
-    .then(response => response.json())
-    .then(responseJson => {
-      console.log(responseJson.id);
-      let issue_card_id = `#ic_${responseJson.id}`;
-      let updatedIssue = displayNewIssue(responseJson);
-      $(issue_card_id).parent().html(updatedIssue);
+  $( "#tabs" ).tabs({
+    activate: function( event, ui ) {
+      var _activeTab = $('#tabs').tabs('option','active');
+      if( _activeTab != 0 ) 
+        $(".ui-dialog-buttonpane button:contains('Save')").button("disable");
+      else
+        $(".ui-dialog-buttonpane button:contains('Save')").button("enable");
+    }
+  });
 
-    });
-  }
+
+  $("#list-all").on('click',function(event){
+    event.preventDefault();
+    displayAllIssuesOnOpen();
+  })
+
+  $( "#list-all" ).tooltip({
+    show: {
+      effect: "slideDown",
+      delay: 250
+    }
+  });
 
   $("#sort-created-lnk").on('click', function (event) {
     event.preventDefault();
@@ -362,7 +423,6 @@ function handleForm() {
     fetch(`/issues/filter/${_status}/${_category}/${sort_created_order}`)
       .then(response => {
         if (response.ok) {
-          console.log('ok')
           return response.json();
         }
         throw new Error(response.statusText);
@@ -407,7 +467,6 @@ function handleForm() {
         throw new Error(response.statusText);
       })
       .then(responseJson => {
-        //console.log(responseJson);
         populateForm(responseJson); //intial array of contributors is here.
         taskDialog.dialog("open");
         taskDialog.dialog({
@@ -528,16 +587,6 @@ function handleForm() {
         if (open_status === 'true') {
           $(co_selector).attr('class', 'open-issue').html(`${icon_lnk_open}`);
           reopenIssue(issue_id);
-          // $.ajax({
-          //   url: `/issues/${issue_id}/due-date`,
-          //   data:{
-          //     id: issue_id
-          //   },
-          //   type: 'PUT',
-          //   success: function(data){
-          //     console.log(`got back ${data}`);
-          //   }
-          // })
         } else {
           $(co_selector).attr('class', 'closed-issue').html(`${icon_lnk_close}`);
           let $_badge_selector = $(co_selector).parents().eq(1).siblings();
@@ -567,9 +616,11 @@ function handleForm() {
             },
             type: 'delete'
           });
-          //console.log(`I have ${issue_card_id}`);
           let issue_card_id = `#ic_${issue_id}`;          
           $(issue_card_id).parent().remove();
+          if($("#issueslist").children().length == 0){
+            $('#issueslist').html(`<div>No issues to deal with..</div>`).addClass('no-issues-style');
+          }
           $(this).dialog("close");
         },
         Cancel: function () {
@@ -598,13 +649,6 @@ function handleForm() {
         let commentArr = responseJson.follow_up;
         commentArr.forEach(elem => {
           displayComments(elem);
-          // if(elem.created_at) {var elem_date = (elem.created_at).split('T')[0];} else elem_date = '';
-          // let comment_div = generateCommentContainer();
-          // let comment_text = $(`<div class="comment-text">${elem.comment}</div>`);
-          // let comment_date = $(`<div class="comment-date">${elem_date}</div>`);
-          // $(comment_div).append(comment_text).append(comment_date).appendTo('.previous-comments');
-
-
         })
       })
       .catch(err => {
