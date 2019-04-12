@@ -12,23 +12,17 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
         integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Archivo|Noto+Sans" rel="stylesheet">
-    <title>Document</title>
+    <title>Issue tracker</title>
 </head>
 
 <body>
-    <div class="banner">
+    <header class="banner">
             <img class="logo-img" src="./issue_tracker_log.png" ALT="align box" ALIGN=CENTER>
        
-    </div>
+    </header>
     <main>
         <section role="region" class="flex-container">
-
-            <a href="" id="add-issue-button"><i class="material-icons md-72">
-                    add_circle
-                </i>
-            </a>
-
-
+            <a href="" id="add-issue-button"><i class="material-icons md-72">add_circle</i></a>
             <div class="issue-filters">
                 <div id="sort-created" title="Sort by Date created">
                     <a href="#" id="sort-created-lnk"><i class="fas fa-sort"> </i></a>
@@ -50,7 +44,6 @@
                     <label for="category_pd_filter" id="category-pd-label">Category
                         <select id="category_pd_filter" class="text ui-widget-content ui-corner-all">
                             <option value=""></option>
-
                         </select>
                     </label>
                 </div>
@@ -64,19 +57,9 @@
         </section>
 
 
-        <div id="dialog-comment-div" title="Add a comment">
-            <form action="" id="add-comment">
-                <input type="hidden" name="comment_issue_id" id="comment_issue_id" />
-                <textarea name="issue_comment" id="issue_comment" cols="50" rows="6"
-                    class="text ui-widget-content ui-corner-all" placeholder="....">
-                    </textarea>
-            </form>
-            <div class="previous-comments">
+        
 
-            </div>
-        </div>
-
-        <div id="dialog-form-div" title="">
+        <div id="dialog-form-div">
             <div id="tabs">
                 <ul>
                     <li><a href="#create-task-tab">Tasks</a></li>
@@ -143,30 +126,6 @@
 
                 </div>
                 <div id="create-contributor-tab" style="display:flex;flex-direction: row;">
-                    <!-- <div class="flex-elems-ver">
-
-                        <div id="contributors-list-container">
-                            <label for="form_contributors">Contributors</label>
-                            <div class="select-list">
-                                <div class="select-list-first-elem">
-                                    <div>
-                                        <select name="form_contributors" id="form_contributors"
-                                            class="form-contributors text ui-widget-content ui-corner-all">
-
-                                        </select>
-                                    </div>
-
-                                    <div>
-                                        <a href="" id="add-contributor"><i class="fas fa-plus-circle"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="contributors-to-add" style="display: flex; flex-direction: column;">
-                        </div>
-                        <div id="contributors-to-add" style="display: flex; flex-direction: column;">
-                        </div>
-                    </div> -->
                         <div id="new-contributor-container">
                             <div>
                                 <label for="firstName">First name</label>
@@ -190,6 +149,19 @@
             </div>
 
         </div>
+
+        <div id="dialog-comment-div" title="Add a comment">
+            <form action="" id="add-comment">
+                <input type="hidden" name="comment_issue_id" id="comment_issue_id" />
+                <textarea name="issue_comment" id="issue_comment" cols="50" rows="6"
+                    class="text ui-widget-content ui-corner-all" placeholder="....">
+                    </textarea>
+            </form>
+            <div class="previous-comments">
+
+            </div>
+        </div>
+
         <div id="confirm-task-delete" title="Delete the task permanently?">
             <p><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>The task will be permanently deleted and cannot be recovered. Are you sure?</p>
           </div>
@@ -205,12 +177,3 @@
   crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 <script src="./js/index.js"></script>
-
-<!--  
-<div class="reorder"><i class="material-icons md-72">reorder</i></div>
-            <div class="by-date">
-                <select>
-                    <option value=""></option>
-                </select>
-            </div>
--->
