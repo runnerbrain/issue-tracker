@@ -58,8 +58,6 @@ IssueSchema.virtual('status_virtual').get(function(){
     var due = moment(this.due_date).utcOffset(-4).format('YYYY-MM-DD');
     if(!this.open)
         return `closed`;
-    console.log(due) ;
-    console.log(today);   
     if( moment(due).isAfter(today) )
         return `pending`;
     else if ( moment(due).isBefore(today) )

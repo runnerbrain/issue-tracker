@@ -26,10 +26,6 @@ app.use(bodyParser.urlencoded({
 }))
 app.use(bodyParser.json());
 
-app.get('/', function (request, response) {
-    response.sendFile('index.html');
-});
-
 
 app.get('/issues', (req, res) => {
     let _sortcreated = '-1';
@@ -39,7 +35,6 @@ app.get('/issues', (req, res) => {
         .find()
         .sort(query_sort)
         .then(issues => {
-            //console.log(issues);
             res.json(issues.map(issue => issue.serialize()));
         })
         .catch(err => {
@@ -136,7 +131,6 @@ app.get('/issues/filter/:status/:category/:sortcreated', (req, res) => {
     }
 
     query_sort = {created_at: _sortcreated};
-    console.log(query);
     IssueModel
         .find(query)
         .sort(query_sort)
@@ -153,7 +147,6 @@ app.get('/issues/filter/:status/:category/:sortcreated', (req, res) => {
 
 app.get('/issues/:issue_id/reopen', (req,res) => {
     let issue_id = req.params.issue_id;
-    console.log(issue_id);
     IssueModel
         .findById( issue_id)
         .then(issue => {
@@ -202,7 +195,6 @@ app.get('/categories', (req, res) => {
 
 
 app.post('/issues', (req, res) => {
-    //console.log(req.body);
     let _title = req.body.form_issue_title;
     let _description = req.body.form_issue_description;
     let _created_at_now = new Date().toISOString();
@@ -256,7 +248,6 @@ app.post('/issues/:issue_id/comments', (req, res) => {
         comment: _comment,
         created_at: _created_at_now
     }
-    console.log(issue_id);
     IssueModel
         .findByIdAndUpdate(issue_id, {
             $push: {
@@ -326,7 +317,6 @@ app.post('/contributor', (req, res) => {
 app.put('/issues/:issue_id', (req, res) => {
 
     let issue_id = req.params.issue_id;
-
     const updated = {};
     updated.title = req.body.form_issue_title;
     updated.description = req.body.form_issue_description;
@@ -376,14 +366,11 @@ app.put('/issues/:issue_id/status/:status', (req, res) => {
                 message: 'Something went wrong editing the status'
             });
         })
-
-
 });
 
 
 app.delete('/issues/:issue_id', (req, res) => {
     let issue_id = req.params.issue_id;
-    console.log(issue_id);
     IssueModel.findByIdAndDelete(issue_id)
     .then( () => {
         res.status(204).json({message : 'Successfully deleted..'});
