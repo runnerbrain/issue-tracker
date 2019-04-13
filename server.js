@@ -210,17 +210,6 @@ app.post('/issues', (req, res) => {
     let _due_date = req.body.issue_due_date;
     let _lead_contributor = req.body.lead_contributor;
 
-    //let _contributor_number = req.body.contributor_number; (this is needed in the contributors section)
-    //console.log('The number of contributors is: ' + req.body.contributor_number)
-    //let _contributors = [];
-
-    // for (let i = 0; i < _contributor_number; i++) {
-    //     let index = `contributor_${(i+1)}`;
-    //     let current = req.body[`${index}`];
-    //     let query = {
-    //         username: current
-    //     }; (this is needed in the contributors section)
-
     ContributorModel
         .findById(_lead_contributor)
         .then(contributor => {
@@ -388,7 +377,6 @@ app.put('/issues/:issue_id/status/:status', (req, res) => {
             });
         })
 
-    // console.log(`from status endpoint, status is: ${open}`);
 
 });
 
@@ -405,10 +393,6 @@ app.delete('/issues/:issue_id', (req, res) => {
         res.status(500).json({message: 'Something went wrong with deleting a task..'});
     })
 });
-
-app.delete('/issues/:issue_id/:comment_id/', (req, res) => {
-    
-})
 
 
 let server;
@@ -445,7 +429,6 @@ function closeServer() {
     });
 }
 
-//app.listen(process.env.PORT || 8080);
 if (require.main === module) {
     runServer(DATABASE_URL).catch(err => console.error(err));
 }

@@ -99,6 +99,8 @@ a{
     justify-content: center;  
   }
 
+
+
   #status-label, #category-pd-label{
     font-size: 18px;
   }
@@ -286,6 +288,8 @@ a{
     align-items: center;
     justify-content: center;
   }
+
+ 
 
   /* Issue create dialog */
   #dialog-form-div  input, 
@@ -502,4 +506,81 @@ label{
 
 #dialog-form-div,#dialog-comment-div,#confirm-task-delete{
   display: none;
+}
+
+
+/*media query to display the issue cards neatly. */
+
+@media screen and (max-width: 600px) {
+    
+  label,select {
+    display: block;
+  }
+
+  #list-all{
+    font-size: 22px;
+  }
+
+  #sort-created-lnk{
+    font-size: 32px;
+  }
+
+
+   #due-by,#by-category{
+    display: flex;
+    font-size: 32px;
+    width: 110px;
+    padding: 0 12px 0 12px;
+    align-items: center;
+    justify-content: center; 
+
+  }
+
+  #status-label, #category-pd-label{
+    font-size: 11px;
+  }
+
+  .issue-header{
+    display: flex;
+    flex-direction: column
+  }
+
+  .issue-header > ._title{
+    font-family: 'Archivo', sans-serif;
+    font-weight: bold;
+    display: flex;
+    /* flex-grow: 1; */
+    color: rgb(100, 130, 182);    
+    margin-top: 10px;
+    width: 100%;
+    justify-content: flex-start;
+    margin-left: 10px;
+  }
+
+   .issue-header > ._tools {
+  display: flex;
+  height: 40px;
+  background: rgb(243, 215, 163);
+    
+    width: 100%;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.25), 0 3px 3px rgba(0,0,0,0.4);
+  }
+
+  ._tools > .status-badge{
+    width: 40px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    /* background: yellowgreen; */
+    margin: 3px 0px 2px 10px;
+    font-size: 12px;
+    color: white;
+    flex-grow: 4;
+  }
+  .issue-desc{
+    flex: 1;
+  }
+
 }
