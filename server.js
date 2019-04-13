@@ -150,7 +150,6 @@ app.get('/issues/:issue_id/reopen', (req,res) => {
     IssueModel
         .findById( issue_id)
         .then(issue => {
-            // console.log(issue.serialize());
             res.json(issue.serialize());
         })
         .catch(err => {
@@ -329,7 +328,6 @@ app.put('/issues/:issue_id', (req, res) => {
             $set: updated
         },{new: true})
         .then(updatedIssue => {
-            console.log(updatedIssue);
             res.status(200).json(updatedIssue.serialize());
         })
         .catch(err => {
@@ -354,7 +352,6 @@ app.put('/issues/:issue_id/status/:status', (req, res) => {
             }
         })
         .then(issue => {
-            //console.log(issue);
             res.status(201).json({
                 id: issue_id,
                 open: `${change_status_to}`
