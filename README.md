@@ -56,7 +56,7 @@ Add a category view:
   - Code: `200 OK`
   - Content: [{ }]
 - Get issue by ID: `GET /issues/:issue_id/`
-  - URL: `/issues`
+  - URL: `/issues/:issue_id`
   - Method: `GET`
   - Code: `200 OK`
   - Content: { }
@@ -96,17 +96,17 @@ Add a category view:
   - Code: `201 CREATED`
   - Content: {}
 - Create a new category: `POST /categories`
-  - URL: `/issues/:issue_id/comments`
+  - URL: `/categories/`
   - Method: `POST`
   - Code: `201 CREATED`
   - Content: {}
 - Create a new contributor: `POST /contributor`
-  - URL: `contributor`
+  - URL: `/contributor`
   - Method: `POST`
   - Code: `201 CREATED`
   - Content: {}
 - Edit an issue: `PUT /issues/:issue_id`
-  - URL: `/issues/:issue_id/comments`
+  - URL: `/issues/:issue_id`
   - Method: `PUT`
   - Code: `201 CREATED`
   - Content: {}
