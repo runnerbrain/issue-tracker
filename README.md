@@ -47,3 +47,76 @@ Add a category view:
 * Mongoose
 * Heroku
 * git
+
+### API Documentation
+
+- Get all issues: `GET /issues`
+  - URL: `/issues`
+  - Method: `GET`
+  - Code: `200 OK`
+  - Content: [{ }]
+- Get issue by ID: `GET /issues/:issue_id/`
+  - URL: `/issues`
+  - Method: `GET`
+  - Code: `200 OK`
+  - Content: { }
+- Get all comments for an issue: `GET /issues/:issue_id/comments`
+  - URL: `/issues/:issue_id/comments`
+  - Method: `GET`
+  - Code: `200 OK`
+  - Content: [{ }]
+- Get all issues filtered: `GET /issues/filter/:status/:category/:sortcreated`
+  - URL: `/issues/filter/:status/:category/:sortcreated`
+  - Method: `GET`
+  - Code: `200 OK`
+  - Content: [{ }]
+- Get reopened issue : `GET /issues/:issue_id/reopen`
+  - URL: `/issues/:issue_id/reopen`
+  - Method: `GET`
+  - Code: `200 OK`
+  - Content: { }
+- Get all contributors: `GET /contributors`
+  - URL: `/contributors`
+  - Method: `GET`
+  - Code: `200 OK`
+  - Content: { }
+- Get all categories: `GET /categories`
+  - URL: `/categories`
+  - Method: `GET`
+  - Code: `200 OK`
+  - Content: { }
+- Create an issue: `POST /issues`
+  - URL: `/issues`
+  - Method: `POST`
+  - Code: `201 CREATED`
+  - Content: {}
+- Create a comment on an issue: `POST /issues/:issue_id/comments`
+  - URL: `/issues/:issue_id/comments`
+  - Method: `POST`
+  - Code: `201 CREATED`
+  - Content: {}
+- Create a new category: `POST /categories`
+  - URL: `/issues/:issue_id/comments`
+  - Method: `POST`
+  - Code: `201 CREATED`
+  - Content: {}
+- Create a new contributor: `POST /contributor`
+  - URL: `contributor`
+  - Method: `POST`
+  - Code: `201 CREATED`
+  - Content: {}
+- Edit an issue: `PUT /issues/:issue_id`
+  - URL: `/issues/:issue_id/comments`
+  - Method: `PUT`
+  - Code: `201 CREATED`
+  - Content: {}
+- Edit a status: `PUT /issues/:issue_id/status/:status`
+  - URL: `/issues/:issue_id/status/:status`
+  - Method: `PUT`
+  - Code: `201 CREATED`
+  - Content: {}
+- Delete an issue : `DELETE '/issues/:issue_id'`
+  - URL: `/issues/:issue_id`
+  - Method: `DELETE`
+  - Code: `200 OK`
+  - Content: {}
